@@ -5,4 +5,5 @@ export const swaggerConfig = new DocumentBuilder()
   .setDescription('La API de CRUD para vehiculos y red social')
   .setVersion('1.0')
   .addTag('Vehiculos')
+  .addTag('Ari-Mil Red Social')
   .build();
