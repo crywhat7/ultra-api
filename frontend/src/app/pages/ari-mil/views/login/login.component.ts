@@ -50,6 +50,7 @@ export class LoginComponent {
         (resp) => {},
         (err) => {
           alert('Error al iniciar sesión, intente de nuevo');
+          this.disabledLogin = false;
         },
         () => {
           this.disabledLogin = false;
@@ -73,6 +74,7 @@ export class LoginComponent {
       (resp) => {},
       (err) => {
         alert('Error al registrar, intente de nuevo');
+        this.disabledRegister = false;
       },
       () => {
         this.disabledRegister = false;

@@ -1,20 +1,156 @@
-<header class="flex justify-between p-5 px-10">
+<header class="flex justify-between py-5 px-10 max-md:px-2">
   <a
     routerLink="/ari-mil"
-    class="text-3xl select-none hover:scale-110 transition-all hover:bg-slate-600/25 px-3 py-2 rounded-lg flex justify-center items-center gap-2"
+    class="text-3xl max-md:text-sm select-none hover:scale-110 transition-all hover:bg-slate-600/25 px-3 py-2 rounded-lg flex justify-center items-center gap-2 max-md:px-1"
   >
     Vehiculos
     <a class="border bg-white text-green-800 rounded-full text-sm px-3">
-      Ir a AriMil
+      AriMil
     </a>
   </a>
-  <span class="flex gap-6 items-center">
+  <span class="flex gap-6 items-center max-md:text-xs">
     &#64;{{ loggedUser.username || "Cargando..." }}
     <button
       (click)="logout()"
-      class="hover:scale-110 hover:text-red-500 hover:bg-gray-200 px-3 transition-all ease-in-out duration-300 rounded-lg"
+      class="hover:scale-110 hover:text-red-500 hover:bg-gray-200 px-3 transition-all ease-in-out duration-300 rounded-lg max-md:text-sm"
     >
       Cerrar sesión
     </button>
   </span>
 </header>
+
+<main class="grid place-content-center">
+  <section class="w-[50vw] max-md:w-[90vw] mb-10">
+    <h1 class="text-xl text-yellow-200 mb-2">Agregar un Vehiculo</h1>
+    <div class="bg-slate-600/50 p-2 rounded-lg">
+      <div class="mb-5">
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Marca</label
+        >
+        <select
+          [(ngModel)]="nuevoVehiculo.brand"
+          (ngModelChange)="getModelos(nuevoVehiculo.brand)"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          @for (marca of marcas; track $index) {
+          <option value="{{ marca.id }}">{{ marca.brand }}</option>
+          }
+        </select>
+      </div>
+      <div class="mb-5">
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Modelo</label
+        >
+        <select
+          [(ngModel)]="nuevoVehiculo.model"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          @for (modelo of modelos; track $index) {
+          <option value="{{ modelo.id }}">{{ modelo.model }}</option>
+          }
+        </select>
+      </div>
+      <div class="mb-5">
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Transmision</label
+        >
+        <select
+          [(ngModel)]="nuevoVehiculo.transmission"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          @for (transmision of tiposTransmision; track $index) {
+          <option value="{{ transmision.id }}">
+            {{ transmision.description }}
+          </option>
+          }
+        </select>
+      </div>
+      <div class="mb-5">
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Color</label
+        >
+        <input
+          [(ngModel)]="nuevoVehiculo.color"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+      <div class="mb-5">
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Año</label
+        >
+        <input
+          type="number"
+          [min]="1900"
+          [(ngModel)]="nuevoVehiculo.year"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
+      <button
+        type="submit"
+        (click)="createVehiculo()"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-2"
+      >
+        Agregar
+      </button>
+    </div>
+  </section>
+  <section class="relative overflow-x-auto w-[50vw] max-md:w-[90vw] mb-8">
+    <h1 class="text-xl text-yellow-200 mb-2">Lista de Vehiculos</h1>
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3">Descripción</th>
+          <th scope="col" class="px-6 py-3">Año</th>
+          <th scope="col" class="px-6 py-3">Color</th>
+          <th scope="col" class="px-6 py-3">Región</th>
+          <th scope="col" class="px-6 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vehiculo of vehiculos; track $index) {
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          >
+            {{ vehiculo.marca.brand }} {{ vehiculo.modelo.model }}
+          </th>
+          <td class="px-6 py-4">{{ vehiculo.year }}</td>
+          <td class="px-6 py-4">{{ vehiculo.color }}</td>
+          <td class="px-6 py-4">{{ vehiculo.marca.region.region }}</td>
+          <td class="px-6 py-4">
+            <svg
+              (click)="deleteVehiculo(vehiculo.id)"
+              class="text-red-500 cursor-pointer hover:text-red-600 transition-all ease-in-out duration-300"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M4 7l16 0" />
+              <path d="M10 11l0 6" />
+              <path d="M14 11l0 6" />
+              <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+              <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+            </svg>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</main>
