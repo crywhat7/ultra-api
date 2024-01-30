@@ -19,7 +19,7 @@ async function bootstrap() {
       'Origin,X-Requested-With,Content-Type,Accept,Authorization,authorization,X-Forwarded-for',
   });
 
-  await app.listen(process.env.PORT || 3000).then((r) => {
+  await app.listen(process.env.PORT || 3000).then(() => {
     console.log(`Server running on port ${process.env.PORT || 3000}`);
   });
 }
