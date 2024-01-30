@@ -1,18 +1,14 @@
-<header class="flex justify-between p-5 px-10">
-  <a
-    routerLink="/vehiculos"
-    class="text-3xl select-none hover:scale-110 transition-all hover:bg-slate-600/25 px-3 py-2 rounded-lg flex justify-center items-center gap-2"
+<header class="flex justify-between py-5 px-10 max-md:px-2">
+  <h1
+    class="text-3xl select-none hover:scale-110 transition-all hover:bg-slate-600/25 px-3 py-2 rounded-lg max-md:text-sm"
   >
-    AriMil Social
-    <a class="border bg-white text-yellow-800 rounded-full text-sm px-3">
-      Ir a Vehículos
-    </a>
-  </a>
-  <span class="flex gap-6 items-center">
+    Ari-Mil Social
+  </h1>
+  <span class="flex gap-6 items-center max-md:text-xs">
     &#64;{{ loggedUser.username || "Cargando..." }}
     <button
       (click)="logout()"
-      class="hover:scale-110 hover:text-red-500 hover:bg-gray-200 px-3 transition-all ease-in-out duration-300 rounded-lg"
+      class="hover:scale-110 hover:text-red-500 hover:bg-gray-200 px-3 transition-all ease-in-out duration-300 rounded-lg max-md:text-sm"
     >
       Cerrar sesión
     </button>
@@ -20,8 +16,10 @@
 </header>
 
 <main class="grid place-content-center">
-  <section class="mb-10 flex flex-col gap-3 w-[50vw]">
-    <h1 class="text-3xl mb-2">Nueva publicación</h1>
+  <section class="mb-10 flex flex-col gap-3 w-[70vw] max-md:w-[90vw]">
+    <h1 class="text-3xl text-yellow-300 font-semibold mb-2">
+      Nueva publicación
+    </h1>
     <!-- New Post -->
     <textarea
       [(ngModel)]="newContent"
@@ -39,8 +37,10 @@
   </section>
 
   <!-- All Posts -->
-  <section class="w-[50vw]">
-    <h1 class="text-3xl">Ultimas Publicaciones</h1>
+  <section class="w-[70vw] max-md:w-[90vw]">
+    <h1 class="text-3xl text-yellow-300 font-semibold mb-1">
+      Ultimas Publicaciones
+    </h1>
     @for (item of posts; track $index) {
     <app-card-post class="" [post]="item"> </app-card-post>
     <br />
