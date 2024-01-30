@@ -1,0 +1,20 @@
+<header class="flex justify-between p-5 px-10">
+  <a
+    routerLink="/ari-mil"
+    class="text-3xl select-none hover:scale-110 transition-all hover:bg-slate-600/25 px-3 py-2 rounded-lg flex justify-center items-center gap-2"
+  >
+    Vehiculos
+    <a class="border bg-white text-green-800 rounded-full text-sm px-3">
+      Ir a AriMil
+    </a>
+  </a>
+  <span class="flex gap-6 items-center">
+    &#64;{{ loggedUser.username || "Cargando..." }}
+    <button
+      (click)="logout()"
+      class="hover:scale-110 hover:text-red-500 hover:bg-gray-200 px-3 transition-all ease-in-out duration-300 rounded-lg"
+    >
+      Cerrar sesión
+    </button>
+  </span>
+</header>

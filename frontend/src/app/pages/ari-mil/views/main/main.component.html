@@ -1,9 +1,13 @@
 <header class="flex justify-between p-5 px-10">
-  <h1
-    class="text-3xl select-none hover:scale-110 transition-all hover:bg-slate-600/25 px-3 py-2 rounded-lg"
+  <a
+    routerLink="/vehiculos"
+    class="text-3xl select-none hover:scale-110 transition-all hover:bg-slate-600/25 px-3 py-2 rounded-lg flex justify-center items-center gap-2"
   >
-    Ari-Mil Social
-  </h1>
+    AriMil Social
+    <a class="border bg-white text-yellow-800 rounded-full text-sm px-3">
+      Ir a Vehículos
+    </a>
+  </a>
   <span class="flex gap-6 items-center">
     &#64;{{ loggedUser.username || "Cargando..." }}
     <button

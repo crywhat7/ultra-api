@@ -12,6 +12,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/ari-mil/ari-mil.module').then((m) => m.AriMilModule),
   },
+  {
+    path: 'vehiculos',
+    loadChildren: () =>
+      import('./pages/vehiculos/vehiculos.module').then(
+        (m) => m.VehiculosModule
+      ),
+  },
 ];
 
 @NgModule({

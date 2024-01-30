@@ -7,11 +7,6 @@ import { LoginComponent } from './views/login/login.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'main',
-    pathMatch: 'full',
-  },
-  {
-    path: 'main',
     component: MainComponent,
     canActivate: [SessionGuard],
     canLoad: [SessionGuard],
