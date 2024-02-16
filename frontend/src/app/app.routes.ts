@@ -4,13 +4,18 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'ari-mil',
+    redirectTo: 'examen-1',
     pathMatch: 'full',
   },
   {
     path: 'ari-mil',
     loadChildren: () =>
       import('./pages/ari-mil/ari-mil.module').then((m) => m.AriMilModule),
+  },
+  {
+    path: 'examen-1',
+    loadChildren: () =>
+      import('./pages/examen-1/examen-1.module').then((m) => m.Examen1Module),
   },
   {
     path: 'vehiculos',

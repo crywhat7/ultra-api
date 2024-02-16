@@ -1,0 +1,378 @@
+<!-- ! HEADER -->
+<header
+  class="flex items-center justify-center gap-5 p-4 bg-gray-800 text-white"
+>
+  <h1>Examen 1 - Alicia Flores</h1>
+</header>
+
+<main class="mt-16 mx-auto w-[75vw] grid grid-cols-8 gap-5">
+  <section class="col-start-1 col-end-4">
+    <div class="relative overflow-x-auto overflow-y-auto">
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3">Clase</th>
+            <th scope="col" class="px-6 py-3">Alumnos</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (clase of clases; track $index) {
+          <tr
+            class="border-b bg-gray-800 border-gray-700 {{
+              claseSeleccionada === clase ? 'bg-gray-500' : ''
+            }} cursor-pointer hover:bg-gray-700 transition-all ease-in-out duration-300"
+            (click)="seleccionarClase(clase)"
+          >
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ clase.nombre }}
+            </th>
+            <td class="px-6 py-4 flex justify-end gap-3">
+              <span>× {{ clase.matriculados.length }}</span>
+              <svg
+                class="icon icon-tabler icon-tabler-users"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+              </svg>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td
+              class="px-6 py-4 font-medium bg-gray-800 border-gray-700 whitespace-nowrap text-red-300"
+              colspan="2"
+            >
+              No hay clases registradas
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="col-start-4 col-end-8">
+    @if (!claseSeleccionada) {
+    <h1>Seleccione una clase para ver los alumnos matriculados</h1>
+    } @else {
+    <header class="flex flex-col">
+      <div class="flex justify-between">
+        <h1 class="font-bold">
+          {{ claseSeleccionada.nombre }}
+        </h1>
+        <span class="flex gap-3">
+          <svg
+            class="icon icon-tabler icon-tabler-users"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+            <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+          </svg>
+          {{ claseSeleccionada.matriculados.length }} matriculados
+        </span>
+      </div>
+      <div class="flex gap-3">
+        <h1 class="font-bold">Maestro asignado:</h1>
+        @if(claseSeleccionada.maestro) {
+        {{ claseSeleccionada.maestro.nombre }}
+        {{ claseSeleccionada.maestro.apellido }}
+        <svg
+          pTooltip="Des-asignar maestro"
+          (click)="desasignarMaestroDeClase()"
+          class="icon icon-tabler icon-tabler-backspace-filled text-red-500 hover:text-red-700 transition-all ease-in-out duration-300"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M20 5a2 2 0 0 1 1.995 1.85l.005 .15v10a2 2 0 0 1 -1.85 1.995l-.15 .005h-11a1 1 0 0 1 -.608 -.206l-.1 -.087l-5.037 -5.04c-.809 -.904 -.847 -2.25 -.083 -3.23l.12 -.144l5 -5a1 1 0 0 1 .577 -.284l.131 -.009h11zm-7.489 4.14a1 1 0 0 0 -1.301 1.473l.083 .094l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.403 1.403l.094 -.083l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.403 -1.403l-.094 .083l-1.293 1.292l-1.293 -1.292l-.094 -.083l-.102 -.07z"
+            stroke-width="0"
+            fill="currentColor"
+          />
+        </svg>
+        } @else {
+        <button
+          (click)="opAsignarMaestro.toggle($event)"
+          class="text-green-500 hover:text-green-700 transition-all ease-in-out duration-300 hover:scale-105 border rounded-lg px-3 border-green-500"
+        >
+          Asignar maestro
+        </button>
+        }
+      </div>
+    </header>
+    <br />
+    <!-- ! Tabla de Alumnos -->
+    <div>
+      <header>
+        <button
+          type="button"
+          (click)="opMatricularAlumno.toggle($event)"
+          class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 flex gap-3 items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon icon-tabler icon-tabler-user-plus"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+            <path d="M16 19h6" />
+            <path d="M19 16v6" />
+            <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+          </svg>
+          Agregar
+        </button>
+      </header>
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3">Nombre</th>
+            <th scope="col" class="px-6 py-3">Apellido</th>
+            <th scope="col" class="px-6 py-3">Nota</th>
+            <th scope="col" class="px-6 py-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (matricula of claseSeleccionada.matriculados; track $index) {
+          <tr
+            class="border-b bg-gray-800 border-gray-700 cursor-pointer hover:bg-gray-700 transition-all ease-in-out duration-300"
+          >
+            <td
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ matricula.alumno.nombre }}
+            </td>
+            <td
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {{ matricula.alumno.apellido }}
+            </td>
+            <td
+              scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              (click)="
+                seleccionarMatricula(matricula); opActualizarNota.toggle($event)
+              "
+            >
+              <span
+                class="{{
+                  matricula.nota < 70 ? 'text-red-300' : 'text-green-300'
+                }}"
+              >
+                {{ matricula.nota }}
+              </span>
+              / 100
+            </td>
+            <td class="px-6 py-4 flex justify-end gap-3">
+              <button
+                (click)="desMatricularAlumno(matricula)"
+                class="flex gap-3 items-center justify-center hover:scale-110 hover:text-red-500 hover:bg-gray-200 px-3 transition-all ease-in-out duration-300 rounded-lg"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-trash"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M4 7l16 0" />
+                  <path d="M10 11l0 6" />
+                  <path d="M14 11l0 6" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                </svg>
+                Eliminar
+              </button>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td
+              class="px-6 py-4 font-medium bg-gray-800 border-gray-700 whitespace-nowrap text-red-300"
+              colspan="4"
+            >
+              No hay alumnos matriculados
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+  </section>
+</main>
+
+<p-overlayPanel #opAsignarMaestro>
+  <ng-template pTemplate="content">
+    <main class="flex flex-col gap-3">
+      <h4>Asignar maestro a la clase</h4>
+      <p-dropdown
+        [options]="maestros"
+        [(ngModel)]="maestroSeleccionado"
+        placeholder="Seleccione un maestro"
+        optionLabel="nombre"
+        [style]="{ width: '100%' }"
+      >
+        <ng-template pTemplate="selectedItem">
+          @if (maestroSeleccionado) {
+          <div class="flex align-items-center gap-2">
+            <div>
+              {{ maestroSeleccionado.nombre }}
+              {{ maestroSeleccionado.apellido }}
+            </div>
+          </div>
+          } @else {
+          <div class="flex align-items-center gap-2">
+            <div>
+              <div>Seleccione un maestro</div>
+            </div>
+          </div>
+          }
+        </ng-template>
+        <ng-template let-maestro pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div>
+              <div>
+                {{ maestro.nombre }}
+                {{ maestro.apellido }}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <button
+        type="button"
+        (click)="asignarMaestroAClase()"
+        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full"
+      >
+        Asignar
+      </button>
+    </main>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #opMatricularAlumno>
+  <ng-template pTemplate="content">
+    <main class="flex flex-col gap-3">
+      <h4>Matricular un Alumno</h4>
+      <p-dropdown
+        [options]="alumnos"
+        [(ngModel)]="alumnoSeleccionado"
+        placeholder="Seleccione un alumno"
+        optionLabel="nombre"
+        [style]="{ width: '100%' }"
+      >
+        <ng-template pTemplate="selectedItem">
+          @if (alumnoSeleccionado) {
+          <div class="flex align-items-center gap-2">
+            <div>
+              {{ alumnoSeleccionado.nombre }}
+              {{ alumnoSeleccionado.apellido }}
+            </div>
+          </div>
+          } @else {
+          <div class="flex align-items-center gap-2">
+            <div>
+              <div>Seleccione un alumno</div>
+            </div>
+          </div>
+          }
+        </ng-template>
+        <ng-template let-alumno pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div>
+              <div>
+                {{ alumno.nombre }}
+                {{ alumno.apellido }}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <button
+        type="button"
+        (click)="matricularAlumno()"
+        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full"
+      >
+        Asignar
+      </button>
+    </main>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #opActualizarNota>
+  <ng-template pTemplate="content">
+    <main class="flex flex-col gap-3">
+      <h4>Actualizar Nota</h4>
+      <input
+        type="number"
+        [(ngModel)]="nuevaNota"
+        [min]="0"
+        [max]="100"
+        class="p-3 rounded-lg w-full"
+        placeholder="Ingrese la nota"
+      />
+      <button
+        type="button"
+        (click)="actualizarNota()"
+        class="focus:outline-none text-white bg-green-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 w-full"
+      >
+        Actualizar
+      </button>
+    </main>
+  </ng-template>
+</p-overlayPanel>
+
+<p-toast></p-toast>
