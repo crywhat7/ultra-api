@@ -25,15 +25,23 @@ export class DB_RESPONSE<T> {
   }
 
   sendSuccessResponse() {
+    const count = Array.isArray(this.data) ? this.data.length : 1;
+
     return {
+      isSuccess: true,
+      message: `Se obtuvieron los ${this.dataName} correctamente`,
+      count,
       [this.dataName]: this.data,
     };
   }
 
   sendErrorResponse() {
     return {
+      isSuccess: false,
+      message: this.error.message || this.errorDefault,
+      count: 0,
+      [this.dataName]: null,
       errorCode: this.error.code || 'UNKNOWN_ERROR_CODE',
-      error: this.error.message || this.errorDefault,
     };
   }
 }
