@@ -6,13 +6,15 @@ import { SupabaseModule } from './db/supabase.module';
 import { ConfigModule } from '@nestjs/config';
 import { AriMilRsModule } from './ari-mil-rs/ari-mil-rs.module';
 import { Examen1Module } from './examen-1/examen-1.module';
+import { ProyectoIS2Module } from './proyecto-is2/proyecto-is2.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({}),
-    VehiculosModule,
-    AriMilRsModule,
+    ProyectoIS2Module,
     Examen1Module,
+    AriMilRsModule,
+    VehiculosModule,
     SupabaseModule,
   ],
   controllers: [AppController],
