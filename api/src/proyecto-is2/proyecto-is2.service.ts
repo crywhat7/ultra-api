@@ -12,6 +12,8 @@ import {
   dataItemTipoPago,
 } from './queries/proyecto-is2.queries';
 import { CreateEmployeeDto } from './dtos/CreateEmployee.dto';
+import { decode } from 'base64-arraybuffer';
+import { STORAGE_RESPONSE } from './utils/storage-response';
 
 const SCHEMA = 'is2';
 
@@ -165,6 +167,24 @@ export class ProyectoIS2Service {
         'inhabilitarEmpleado',
         error,
         'Error al inhabilitar empleado',
+      ).sendResponse();
+    },
+    uploadImageToEmpleado: async (id: number, imageBase64: string) => {
+      const [, base64] = imageBase64.split(',');
+      const ArrayBufferImage = decode(base64);
+
+      const { data, error } = await this.supabase.storage
+        .from('is_documents_and_files')
+        .upload(`empleados/${id}.jpeg`, ArrayBufferImage, {
+          contentType: 'image/jpeg',
+          upsert: true,
+        });
+
+      return new STORAGE_RESPONSE<typeof data>(
+        data,
+        'uploadImageToEmpleado',
+        error,
+        'Error al subir imagen',
       ).sendResponse();
     },
   };

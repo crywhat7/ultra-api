@@ -12,6 +12,7 @@ import { ProyectoIS2Service } from './proyecto-is2.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateEmployeeDto } from './dtos/CreateEmployee.dto';
 import { SetStatusAndObvservacionesDto } from './dtos/SetStatusAndObservaciones.dto';
+import { UploadImageDto } from './dtos/UploadImage.dto';
 
 @ApiTags('Proyecto Ingenieria de Software 2')
 @Controller('proyecto-is2')
@@ -53,6 +54,16 @@ export class ProyectoIS2Controller {
       id,
       body.inhabilitado,
       body.observaciones,
+    );
+  }
+  @Post('empleados/uploadImage/:id')
+  async postEmpleadoImage(
+    @Param('id') id: number,
+    @Body() body: UploadImageDto,
+  ) {
+    return await this.proyectoIS2Service.EMPLEADOS.uploadImageToEmpleado(
+      id,
+      body.base64,
     );
   }
 
