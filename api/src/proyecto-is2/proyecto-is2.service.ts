@@ -471,6 +471,25 @@ export class ProyectoIS2Service {
         'Error al eliminar producto',
       ).sendResponse();
     },
+
+    uploadImageToProducto: async (id: number, imageBase64: string) => {
+      const [, base64] = imageBase64.split(',');
+      const ArrayBufferImage = decode(base64);
+
+      const { data, error } = await this.supabase.storage
+        .from('is_documents_and_files')
+        .upload(`productos/${id}.jpeg`, ArrayBufferImage, {
+          contentType: 'image/jpeg',
+          upsert: true,
+        });
+
+      return new STORAGE_RESPONSE<typeof data>(
+        data,
+        'uploadImageToProducto',
+        error,
+        'Error al subir imagen',
+      ).sendResponse();
+    },
   };
 
   TIPOS_UNIDADES = {

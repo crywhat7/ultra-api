@@ -152,6 +152,16 @@ export class ProyectoIS2Controller {
   async deleteProducto(@Param('id') id: number) {
     return await this.proyectoIS2Service.PRODUCTOS.deleteProducto(id);
   }
+  @Post('productos/uploadImage/:id')
+  async postProductoImage(
+    @Param('id') id: number,
+    @Body() body: UploadImageDto,
+  ) {
+    return await this.proyectoIS2Service.PRODUCTOS.uploadImageToProducto(
+      id,
+      body.base64,
+    );
+  }
 
   // ! Marcas
   @Get('marcas')
