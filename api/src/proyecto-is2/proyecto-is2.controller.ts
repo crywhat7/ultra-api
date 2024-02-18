@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ProyectoIS2Service } from './proyecto-is2.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -17,6 +17,22 @@ export class ProyectoIS2Controller {
   @Get('empleados')
   async getEmpleados() {
     return await this.proyectoIS2Service.EMPLEADOS.getEmpleados();
+  }
+  @Get('empleados/:id')
+  async getEmpleadoById(@Param('id') id: number) {
+    return await this.proyectoIS2Service.EMPLEADOS.getEmpleadoById(id);
+  }
+
+  // ! Login
+  @Get('login/:emailOrAlias/:password')
+  async loginUser(
+    @Param('emailOrAlias') emailOrAlias: string,
+    @Param('password') password: string,
+  ) {
+    return await this.proyectoIS2Service.LOGIN.loginUser(
+      emailOrAlias,
+      password,
+    );
   }
 
   // ! Generos

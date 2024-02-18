@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/db/supabase.service';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
 import { DB_RESPONSE } from './utils/db-response';
 import {
   dataItemCategoria,
@@ -34,6 +34,54 @@ export class ProyectoIS2Service {
         'empleados',
         error,
         'Error al obtener empleados',
+      ).sendResponse();
+    },
+    getEmpleadoById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('empleados')
+        .select(dataItemEmpleado)
+        .eq('id', id)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'empleados',
+        error,
+        'Error al obtener empleado',
+      ).sendResponse();
+    },
+  };
+
+  LOGIN = {
+    loginUser: async (emailOrAlias: string, password: string) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('empleados')
+        .select(dataItemEmpleado)
+        .or(`email.eq.${emailOrAlias},alias.eq.${emailOrAlias}`)
+        .eq('password', password)
+        .single();
+
+      if (!data) {
+        return new DB_RESPONSE<typeof data>(
+          data,
+          'login',
+          {
+            message: 'Usuario o contraseña incorrectos',
+            details: '',
+            hint: '',
+            code: '500',
+          } as PostgrestError,
+          'Usuario o contraseña incorrectos',
+        ).sendResponse();
+      }
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'login',
+        error,
+        'Se ha logueado correctamente',
       ).sendResponse();
     },
   };
