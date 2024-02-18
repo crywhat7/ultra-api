@@ -13,6 +13,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateEmployeeDto } from './dtos/CreateEmployee.dto';
 import { SetStatusAndObvservacionesDto } from './dtos/SetStatusAndObservaciones.dto';
 import { UploadImageDto } from './dtos/UploadImage.dto';
+import { CreateProductDto } from './dtos/CreateProduct.dto';
+import { UpdateProductDto } from './dtos/UpdateProducto.dto';
 
 @ApiTags('Proyecto Ingenieria de Software 2')
 @Controller('proyecto-is2')
@@ -130,6 +132,25 @@ export class ProyectoIS2Controller {
   @Get('productos')
   async getProductos() {
     return await this.proyectoIS2Service.PRODUCTOS.getProductos();
+  }
+  @Get('productos/:id')
+  async getProductoById(@Param('id') id: number) {
+    return await this.proyectoIS2Service.PRODUCTOS.getProductoById(id);
+  }
+  @Post('productos')
+  async postProducto(@Body() producto: CreateProductDto) {
+    return await this.proyectoIS2Service.PRODUCTOS.postProducto(producto);
+  }
+  @Put('productos/:id')
+  async putProducto(
+    @Param('id') id: number,
+    @Body() producto: UpdateProductDto,
+  ) {
+    return await this.proyectoIS2Service.PRODUCTOS.updateProducto(id, producto);
+  }
+  @Delete('productos/:id')
+  async deleteProducto(@Param('id') id: number) {
+    return await this.proyectoIS2Service.PRODUCTOS.deleteProducto(id);
   }
 
   // ! Marcas

@@ -19,6 +19,8 @@ import {
 import { CreateEmployeeDto } from './dtos/CreateEmployee.dto';
 import { decode } from 'base64-arraybuffer';
 import { STORAGE_RESPONSE } from './utils/storage-response';
+import { CreateProductDto } from './dtos/CreateProduct.dto';
+import { UpdateProductDto } from './dtos/UpdateProducto.dto';
 
 const SCHEMA = 'is2';
 
@@ -393,6 +395,80 @@ export class ProyectoIS2Service {
         'productos',
         error,
         'Error al obtener productos',
+      ).sendResponse();
+    },
+
+    getProductoById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('productos')
+        .select(dataItemProducto)
+        .eq('id', id)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'productos',
+        error,
+        'Error al obtener producto',
+      ).sendResponse();
+    },
+
+    postProducto: async (producto: CreateProductDto) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('productos')
+        .insert({
+          descripcion: producto.descripcion,
+          id_subclase: producto.idSubclase,
+          id_marca: producto.idMarca,
+        })
+        .select(dataItemProducto)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'nuevoProducto',
+        error,
+        'Error al crear producto',
+      ).sendResponse();
+    },
+
+    updateProducto: async (id: number, producto: UpdateProductDto) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('productos')
+        .update({
+          descripcion: producto.descripcion,
+          id_marca: producto.idMarca,
+          inhabilitado: producto.inhabilitado,
+          oferta: producto.oferta,
+        })
+        .eq('id', id)
+        .select(dataItemProducto)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'actualizarProducto',
+        error,
+        'Error al actualizar producto',
+      ).sendResponse();
+    },
+
+    deleteProducto: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('productos')
+        .delete()
+        .eq('id', id)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'eliminarProducto',
+        error,
+        'Error al eliminar producto',
       ).sendResponse();
     },
   };
