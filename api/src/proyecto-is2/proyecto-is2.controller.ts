@@ -90,16 +90,28 @@ export class ProyectoIS2Controller {
     return await this.proyectoIS2Service.GENEROS.getGeneros();
   }
 
-  // ! Familias
-  @Get('familias')
-  async getFamilias() {
-    return await this.proyectoIS2Service.FAMILIAS.getFamilias();
-  }
-
   // ! Tipo de Pago
   @Get('tipo-pago')
   async getTipoPago() {
     return await this.proyectoIS2Service.TIPO_PAGO.getTipoPago();
+  }
+
+  // ! Forma de Pago
+  @Get('forma-pago')
+  async getFormaPago() {
+    return await this.proyectoIS2Service.FORMA_PAGO.getFormaPago();
+  }
+
+  // ! Tipos de Unidad
+  @Get('tipos-unidades')
+  async getTiposUnidades() {
+    return await this.proyectoIS2Service.TIPOS_UNIDADES.getTiposUnidades();
+  }
+
+  // ! Familias
+  @Get('familias')
+  async getFamilias() {
+    return await this.proyectoIS2Service.FAMILIAS.getFamilias();
   }
 
   // ! Categorias
@@ -112,5 +124,17 @@ export class ProyectoIS2Controller {
   @Get('subclases')
   async getSubclases() {
     return await this.proyectoIS2Service.SUBCLASES.getSubclases();
+  }
+
+  // ! Productos
+  @Get('productos')
+  async getProductos() {
+    return await this.proyectoIS2Service.PRODUCTOS.getProductos();
+  }
+
+  // ! Marcas
+  @Get('marcas')
+  async getMarcas() {
+    return await this.proyectoIS2Service.MARCAS.getMarcas();
   }
 }

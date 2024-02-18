@@ -6,10 +6,15 @@ import {
   dataItemCategoria,
   dataItemEmpleado,
   dataItemFamilia,
+  dataItemFormaPago,
   dataItemGenero,
+  dataItemMarca,
+  dataItemProducto,
   dataItemPuesto,
   dataItemSubclase,
+  dataItemTienda,
   dataItemTipoPago,
+  dataItemTipoUnidad,
 } from './queries/proyecto-is2.queries';
 import { CreateEmployeeDto } from './dtos/CreateEmployee.dto';
 import { decode } from 'base64-arraybuffer';
@@ -266,9 +271,26 @@ export class ProyectoIS2Service {
 
       return new DB_RESPONSE<typeof data>(
         data,
-        'tipos_pago',
+        'tiposPago',
         error,
         'Error al obtener tipos de pago',
+      ).sendResponse();
+    },
+  };
+
+  FORMA_PAGO = {
+    getFormaPago: async () => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('formas_pago')
+        .select(dataItemFormaPago)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'formasPago',
+        error,
+        'Error al obtener formas de pago',
       ).sendResponse();
     },
   };
@@ -320,6 +342,74 @@ export class ProyectoIS2Service {
         'subclases',
         error,
         'Error al obtener subclases',
+      ).sendResponse();
+    },
+  };
+
+  TIENDAS = {
+    getTiendas: async () => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('tiendas')
+        .select(dataItemTienda)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tiendas',
+        error,
+        'Error al obtener tiendas',
+      ).sendResponse();
+    },
+  };
+
+  MARCAS = {
+    getMarcas: async () => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('marcas')
+        .select(dataItemMarca)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'marcas',
+        error,
+        'Error al obtener marcas',
+      ).sendResponse();
+    },
+  };
+
+  PRODUCTOS = {
+    getProductos: async () => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('productos')
+        .select(dataItemProducto)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'productos',
+        error,
+        'Error al obtener productos',
+      ).sendResponse();
+    },
+  };
+
+  TIPOS_UNIDADES = {
+    getTiposUnidades: async () => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('tipos_unidades')
+        .select(dataItemTipoUnidad)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tiposUnidades',
+        error,
+        'Error al obtener tipos de unidades',
       ).sendResponse();
     },
   };
