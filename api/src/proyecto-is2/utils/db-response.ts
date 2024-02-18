@@ -31,7 +31,7 @@ export class DB_RESPONSE<T> {
       isSuccess: true,
       message: `Se obtuvieron los ${this.dataName} correctamente`,
       count,
-      [this.dataName]: this.data,
+      data: this.data,
     };
   }
 
@@ -40,7 +40,7 @@ export class DB_RESPONSE<T> {
       isSuccess: false,
       message: this.error.message || this.errorDefault,
       count: 0,
-      [this.dataName]: null,
+      data: null,
       errorCode: this.error.code || 'UNKNOWN_ERROR_CODE',
     };
   }
