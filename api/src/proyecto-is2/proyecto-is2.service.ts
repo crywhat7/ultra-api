@@ -9,6 +9,7 @@ import {
   dataItemFormaPago,
   dataItemGenero,
   dataItemMarca,
+  dataItemPrecioProducto,
   dataItemProducto,
   dataItemPuesto,
   dataItemSubclase,
@@ -505,6 +506,54 @@ export class ProyectoIS2Service {
         'tiposUnidades',
         error,
         'Error al obtener tipos de unidades',
+      ).sendResponse();
+    },
+  };
+
+  PRECIOS_PRODUCTOS = {
+    setPrecioProducto: async (
+      idProducto: number,
+      idTipoUnidad: number,
+      precio: number,
+    ) => {
+      // Insert or Update if exists idProducto and idTipoUnidad
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('productos_precios')
+        .upsert(
+          {
+            id_producto: idProducto,
+            id_tipo_unidad: idTipoUnidad,
+            precio,
+          },
+          {
+            onConflict: 'id_producto,id_tipo_unidad',
+          },
+        )
+        .select(dataItemPrecioProducto)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'precioProducto',
+        error,
+        'Error al establecer precio de producto',
+      ).sendResponse();
+    },
+
+    deletePrecioProducto: async (idPrecioProducto: number) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('productos_precios')
+        .delete()
+        .eq('id', idPrecioProducto)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'eliminarPrecioProducto',
+        error,
+        'Error al eliminar precio de producto',
       ).sendResponse();
     },
   };

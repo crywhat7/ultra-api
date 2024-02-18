@@ -15,6 +15,7 @@ import { SetStatusAndObvservacionesDto } from './dtos/SetStatusAndObservaciones.
 import { UploadImageDto } from './dtos/UploadImage.dto';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProducto.dto';
+import { UpdatePrecioProductDto } from './dtos/UpdatePrecioProducto.dto';
 
 @ApiTags('Proyecto Ingenieria de Software 2')
 @Controller('proyecto-is2')
@@ -160,6 +161,25 @@ export class ProyectoIS2Controller {
     return await this.proyectoIS2Service.PRODUCTOS.uploadImageToProducto(
       id,
       body.base64,
+    );
+  }
+
+  // ! Precio Producto
+  @Post('precios-productos/:idProducto')
+  async getPreciosProductos(
+    @Param('idProducto') idProducto: number,
+    @Body() body: UpdatePrecioProductDto,
+  ) {
+    return await this.proyectoIS2Service.PRECIOS_PRODUCTOS.setPrecioProducto(
+      idProducto,
+      body.idTipoUnidad,
+      body.precio,
+    );
+  }
+  @Delete('precios-productos/:id')
+  async deletePrecioProducto(@Param('id') id: number) {
+    return await this.proyectoIS2Service.PRECIOS_PRODUCTOS.deletePrecioProducto(
+      id,
     );
   }
 
