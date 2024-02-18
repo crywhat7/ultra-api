@@ -4,12 +4,14 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
 import { ProyectoIS2Service } from './proyecto-is2.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateEmployeeDto } from './dtos/CreateEmployee.dto';
+import { SetStatusAndObvservacionesDto } from './dtos/SetStatusAndObservaciones.dto';
 
 @ApiTags('Proyecto Ingenieria de Software 2')
 @Controller('proyecto-is2')
@@ -42,6 +44,18 @@ export class ProyectoIS2Controller {
   ) {
     return await this.proyectoIS2Service.EMPLEADOS.updateEmpleado(id, empleado);
   }
+  @Patch('empleados/setStatusAndObservaciones/:id')
+  async patchEmpleadoStatusAndObservaciones(
+    @Param('id') id: number,
+    @Body() body: SetStatusAndObvservacionesDto,
+  ) {
+    return await this.proyectoIS2Service.EMPLEADOS.updateStatusAndObservacionesEmpleado(
+      id,
+      body.inhabilitado,
+      body.observaciones,
+    );
+  }
+
   @Delete('empleados/:id')
   async deleteEmpleado(@Param('id') id: number) {
     return await this.proyectoIS2Service.EMPLEADOS.deleteEmpleado(id);

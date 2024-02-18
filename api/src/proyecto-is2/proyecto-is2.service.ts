@@ -146,6 +146,27 @@ export class ProyectoIS2Service {
         'Error al eliminar empleado',
       ).sendResponse();
     },
+
+    updateStatusAndObservacionesEmpleado: async (
+      id: number,
+      inhabilitado: boolean,
+      observaciones: string,
+    ) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('empleados')
+        .update({ inhabilitado, observaciones })
+        .eq('id', id)
+        .select(dataItemEmpleado)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'inhabilitarEmpleado',
+        error,
+        'Error al inhabilitar empleado',
+      ).sendResponse();
+    },
   };
 
   LOGIN = {
