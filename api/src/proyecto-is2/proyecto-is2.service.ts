@@ -11,6 +11,7 @@ import {
   dataItemSubclase,
   dataItemTipoPago,
 } from './queries/proyecto-is2.queries';
+import { CreateEmployeeDto } from './dtos/CreateEmployee.dto';
 
 const SCHEMA = 'is2';
 
@@ -49,6 +50,100 @@ export class ProyectoIS2Service {
         'empleados',
         error,
         'Error al obtener empleado',
+      ).sendResponse();
+    },
+    postEmpleado: async (empleado: CreateEmployeeDto) => {
+      const {
+        nombre,
+        apellido,
+        email,
+        telefono,
+        idPuesto,
+        idGenero,
+        alias,
+        password,
+        salario,
+        idTipoPago,
+      } = empleado;
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('empleados')
+        .insert({
+          nombre,
+          apellido,
+          email,
+          telefono,
+          id_puesto: idPuesto,
+          id_genero: idGenero,
+          alias,
+          password,
+          salario,
+          id_tipo_pago: idTipoPago,
+        })
+        .select(dataItemEmpleado)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'registrarEmpleado',
+        error,
+        'Error al crear empleado',
+      ).sendResponse();
+    },
+
+    updateEmpleado: async (id: number, empleado: CreateEmployeeDto) => {
+      const {
+        nombre,
+        apellido,
+        email,
+        telefono,
+        idPuesto,
+        idGenero,
+        alias,
+        password,
+        salario,
+        idTipoPago,
+      } = empleado;
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('empleados')
+        .update({
+          nombre,
+          apellido,
+          email,
+          telefono,
+          id_puesto: idPuesto,
+          id_genero: idGenero,
+          alias,
+          password,
+          salario,
+          id_tipo_pago: idTipoPago,
+        })
+        .eq('id', id)
+        .select(dataItemEmpleado)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'actualizar empleado',
+        error,
+        'Error al actualizar empleado',
+      ).sendResponse();
+    },
+
+    deleteEmpleado: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('empleados')
+        .delete()
+        .eq('id', id)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'eliminarEmpleado',
+        error,
+        'Error al eliminar empleado',
       ).sendResponse();
     },
   };
