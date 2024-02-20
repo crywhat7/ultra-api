@@ -15,7 +15,7 @@ export const dataItemFormaPago = BASICS_WITH_DESCRIPTION;
 export const dataItemMarca = BASICS_WITH_DESCRIPTION;
 export const dataItemTienda = BASICS_WITH_DESCRIPTION;
 
-export const dataItemTipoUnidad = `${BASICS_WITH_DESCRIPTION}, permiteDecimales: permite_decimales`;
+export const dataItemTipoUnidad = `${BASICS_WITH_DESCRIPTION}, permiteDecimales: permite_decimales, abreviacion`;
 export const dataItemFamilia = `${BASICS_WITH_DESCRIPTION}, codigoFamilia: codigofamilia`;
 export const dataItemCategoria = `${BASICS_WITH_DESCRIPTION}, codigoCategoria: codigocategoria, familia: familias (${dataItemFamilia})`;
 export const dataItemSubclase = `${BASICS_WITH_DESCRIPTION}, codigoSubclase: codigosubclase, categoria: categorias (${dataItemCategoria})`;
