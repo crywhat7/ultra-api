@@ -188,4 +188,10 @@ export class ProyectoIS2Controller {
   async getMarcas() {
     return await this.proyectoIS2Service.MARCAS.getMarcas();
   }
+
+  // ! Clientes
+  @Get('clientes')
+  async getClientes() {
+    return await this.proyectoIS2Service.CLIENTES.getClientes();
+  }
 }

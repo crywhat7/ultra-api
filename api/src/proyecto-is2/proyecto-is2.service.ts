@@ -4,6 +4,7 @@ import { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
 import { DB_RESPONSE } from './utils/db-response';
 import {
   dataItemCategoria,
+  dataItemCliente,
   dataItemEmpleado,
   dataItemFamilia,
   dataItemFormaPago,
@@ -22,6 +23,7 @@ import { decode } from 'base64-arraybuffer';
 import { STORAGE_RESPONSE } from './utils/storage-response';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProducto.dto';
+import { CreateClientDto } from './dtos/CreateClient.dto';
 
 const SCHEMA = 'is2';
 
@@ -554,6 +556,42 @@ export class ProyectoIS2Service {
         'eliminarPrecioProducto',
         error,
         'Error al eliminar precio de producto',
+      ).sendResponse();
+    },
+  };
+
+  CLIENTES = {
+    getClientes: async () => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('clientes')
+        .select(dataItemCliente)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'clientes',
+        error,
+        'Error al obtener clientes',
+      ).sendResponse();
+    },
+    createClient: async (client: CreateClientDto) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('clientes')
+        .insert({
+          nombre_completo: client.nombreCompleto,
+          dni: client.dni,
+          telefono: client.telefono,
+        })
+        .select(dataItemCliente)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'registrarCliente',
+        error,
+        'Error al crear cliente',
       ).sendResponse();
     },
   };

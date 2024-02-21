@@ -59,3 +59,10 @@ oferta,
 inventario: inventario (${dataItemInventario}),
 precios: productos_precios (${dataItemPrecioProducto})
 `;
+
+export const dataItemCliente = `
+${BASICS},
+dni,
+nombreCompleto: nombre_completo,
+telefono
+`;
