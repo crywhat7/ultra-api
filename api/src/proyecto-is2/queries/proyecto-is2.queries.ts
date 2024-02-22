@@ -66,3 +66,23 @@ dni,
 nombreCompleto: nombre_completo,
 telefono
 `;
+
+export const dataItemDetalleFactura = `
+${BASICS},
+idFactura: id_factura,
+producto: productos (${dataItemProducto}),
+tipoUnidad: tipos_unidades (${dataItemTipoUnidad}),
+cantidad,
+precioUnitario: precio_unitario
+subtotal
+`;
+
+export const dataItemFactura = `
+${BASICS},
+cliente: clientes (${dataItemCliente}),
+empleado: empleados (${dataItemEmpleado}),
+formaPago: formas_pago(${dataItemFormaPago}),
+total,
+nula,
+detalle: detalle_facturas (${dataItemDetalleFactura})
+`;

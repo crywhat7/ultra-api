@@ -5,7 +5,9 @@ import { DB_RESPONSE } from './utils/db-response';
 import {
   dataItemCategoria,
   dataItemCliente,
+  dataItemDetalleFactura,
   dataItemEmpleado,
+  dataItemFactura,
   dataItemFamilia,
   dataItemFormaPago,
   dataItemGenero,
@@ -575,6 +577,37 @@ export class ProyectoIS2Service {
         'Error al obtener clientes',
       ).sendResponse();
     },
+
+    getClienteById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('clientes')
+        .select(dataItemCliente)
+        .eq('id', id)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'clientes',
+        error,
+        'Error al obtener cliente',
+      ).sendResponse();
+    },
+    getClienteByDni: async (dni: string) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('clientes')
+        .select(dataItemCliente)
+        .eq('dni', dni)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'clientes',
+        error,
+        'Error al obtener cliente',
+      ).sendResponse();
+    },
     createClient: async (client: CreateClientDto) => {
       const { data, error } = await this.supabase
         .schema(SCHEMA)
@@ -594,5 +627,216 @@ export class ProyectoIS2Service {
         'Error al crear cliente',
       ).sendResponse();
     },
+  };
+
+  FACTURAS = {
+    getFacturas: async () => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('facturas')
+        .select(dataItemFactura)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'facturas',
+        error,
+        'Error al obtener facturas',
+      ).sendResponse();
+    },
+
+    getFacturaById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('facturas')
+        .select(dataItemFactura)
+        .eq('id', id)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'facturas',
+        error,
+        'Error al obtener factura',
+      ).sendResponse();
+    },
+
+    createFactura: async (
+      idCliente: number,
+      idEmpleado: number,
+      idFormaPago: number,
+    ) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('facturas')
+        .insert({
+          id_cliente: idCliente,
+          id_empleado: idEmpleado,
+          id_forma_pago: idFormaPago,
+        })
+        .select(dataItemFactura)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'crearFactura',
+        error,
+        'Error al crear factura',
+      ).sendResponse();
+    },
+
+    deleteFactura: async (idFactura: number) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('facturas')
+        .delete()
+        .eq('id', idFactura)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'eliminarFactura',
+        error,
+        'Error al eliminar factura',
+      ).sendResponse();
+    },
+
+    insertDetalleFactura: async (
+      idFactura: number,
+      idProducto: number,
+      idTipoUnidad: number,
+      cantidad: number,
+      precioUnitario: number,
+      subtotal: number,
+    ) => {
+      const { data, error } = await this.supabase
+        .schema(SCHEMA)
+        .from('detalle_facturas')
+        .insert({
+          id_factura: idFactura,
+          id_producto: idProducto,
+          id_tipo_unidad: idTipoUnidad,
+          cantidad,
+          precio_unitario: precioUnitario,
+          subtotal,
+        })
+        .select(dataItemDetalleFactura)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'insertarDetalleFactura',
+        error,
+        'Error al insertar detalle de factura',
+      ).sendResponse();
+    },
+
+    processCreateFactura: async (
+      empleado: {
+        idEmpleado: number;
+      },
+      cliente: {
+        dni: string;
+        nombreCompleto: string;
+        telefono: string;
+      },
+      formaPago: {
+        idFormaPago: number;
+      },
+      productosFactura: {
+        idProducto: number;
+        idTipoUnidad: number;
+        cantidad: number;
+        precioUnitario: number;
+        subtotal: number;
+      }[],
+    ) => {
+      let idNuevaFactura: number | null = null;
+
+      try {
+        const { dni, nombreCompleto, telefono } = cliente;
+
+        // ! Importante, si da error en la creación de cualquier cosa, se debe hacer rollback de todo lo que se haya hecho
+        // 1. Verificar si el cliente existe y si no existe, crearlo
+        const clienteFactura = await this.returnActualOrNewClient(
+          dni,
+          nombreCompleto,
+          telefono,
+        );
+
+        // 3. Crear la factura
+        const { count: countFactura, data: factura } =
+          await this.FACTURAS.createFactura(
+            clienteFactura.id,
+            empleado.idEmpleado,
+            formaPago.idFormaPago,
+          );
+
+        idNuevaFactura = factura.id;
+
+        if (!countFactura) {
+          return new DB_RESPONSE<typeof factura>(
+            null,
+            'crearFactura',
+            {
+              message: 'Error al crear factura',
+              details: '',
+              hint: '',
+              code: '500',
+            } as PostgrestError,
+            'Error al crear factura',
+          ).sendResponse();
+        }
+
+        // 4. Crear los detalles de la factura
+        productosFactura.forEach(async (productoFactura) => {
+          const { idProducto, idTipoUnidad, cantidad } = productoFactura;
+
+          const { isSuccess: isSuccessDetalleFactura } =
+            await this.FACTURAS.insertDetalleFactura(
+              factura.id,
+              idProducto,
+              idTipoUnidad,
+              cantidad,
+              productoFactura.precioUnitario,
+              productoFactura.subtotal,
+            );
+
+          if (!isSuccessDetalleFactura) {
+            throw new Error('Error al crear detalle de factura');
+          }
+        });
+      } catch (error) {
+        // 6. Si hay un error, hacer rollback de todo lo que se haya hecho
+        if (idNuevaFactura) {
+          await this.FACTURAS.deleteFactura(idNuevaFactura);
+        }
+      }
+
+      // 5. Actualizar el inventario
+    },
+  };
+  returnActualOrNewClient = async (
+    dni: string,
+    nombre: string,
+    telefono: string,
+  ) => {
+    const { count: countActualClient, data: actualClient } =
+      await this.CLIENTES.getClienteByDni(dni);
+
+    if (countActualClient) {
+      return actualClient;
+    }
+
+    const { data: newClient } = await this.CLIENTES.createClient({
+      dni,
+      nombreCompleto: nombre,
+      telefono,
+    });
+    if (!newClient) {
+      throw new Error('Error al crear cliente');
+    }
+
+    return newClient;
   };
 }

@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ProyectoIS2Service } from './proyecto-is2.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -191,7 +192,16 @@ export class ProyectoIS2Controller {
 
   // ! Clientes
   @Get('clientes')
-  async getClientes() {
+  // ! el parametro dni es opcional
+  async getClientes(@Query('dni') dni = null) {
+    if (dni) {
+      return await this.proyectoIS2Service.CLIENTES.getClienteByDni(dni);
+    }
     return await this.proyectoIS2Service.CLIENTES.getClientes();
+  }
+
+  @Get('clientes/:id')
+  async getClienteById(@Param('id') id: number) {
+    return await this.proyectoIS2Service.CLIENTES.getClienteById(id);
   }
 }
