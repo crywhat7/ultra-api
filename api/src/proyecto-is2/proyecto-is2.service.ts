@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/db/supabase.service';
 import { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
-import { DB_RESPONSE } from './utils/db-response';
+import { DB_RESPONSE } from '../utils/db-response';
 import {
   dataItemCategoria,
   dataItemCliente,
@@ -22,7 +22,7 @@ import {
 } from './queries/proyecto-is2.queries';
 import { CreateEmployeeDto } from './dtos/CreateEmployee.dto';
 import { decode } from 'base64-arraybuffer';
-import { STORAGE_RESPONSE } from './utils/storage-response';
+import { STORAGE_RESPONSE } from '../utils/storage-response';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProducto.dto';
 import { CreateClientDto } from './dtos/CreateClient.dto';

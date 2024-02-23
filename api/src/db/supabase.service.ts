@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
-import { dataItemVehiculo } from '../vehiculos/queries/data-item-vehiculo';
 
 @Injectable()
 export class SupabaseService {
