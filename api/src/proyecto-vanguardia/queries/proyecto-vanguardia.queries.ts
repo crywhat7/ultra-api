@@ -12,3 +12,5 @@ export const dataItemRol = `
 ${BASICS_WITH_DESCRIPTION},
 esAdmin: es_admin
 `;
+
+export const dataItemGenero = BASICS_WITH_DESCRIPTION;
