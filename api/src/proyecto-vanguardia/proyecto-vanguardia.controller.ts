@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -191,6 +192,23 @@ export class ProyectoVanguardiaController {
   @Post('tickets')
   async crearTicket(@Body() body: CreateTicketDto) {
     return await this.pryVanguardiaSrv.TICKETS.createTicket(body);
+  }
+  @Patch('tickets/:id/terminacion/:idTerminacion')
+  async terminarTicket(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('idTerminacion', ParseIntPipe) idTerminacion: number,
+  ) {
+    return await this.pryVanguardiaSrv.TICKETS.updateTerminacionTicket(
+      id,
+      idTerminacion,
+    );
+  }
+  @Patch('tickets/:id/estado/:idEstado')
+  async cambiarEstadoTicket(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('idEstado', ParseIntPipe) idEstado: number,
+  ) {
+    return await this.pryVanguardiaSrv.TICKETS.updateStatusTicket(id, idEstado);
   }
 
   // ! Chat

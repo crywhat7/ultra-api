@@ -654,6 +654,38 @@ export class ProyectoVanguardiaService {
 
       return await this.TICKETS.getTicketById(idNuevoTicket);
     },
+    updateStatusTicket: async (id: number, idEstado: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('tickets')
+        .update({ id_status: idEstado })
+        .eq('id', id)
+        .select(dataItemTicket)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tickets',
+        error,
+        'Error al actualizar estado de ticket',
+      ).sendResponse();
+    },
+    updateTerminacionTicket: async (id: number, idTerminacion: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('tickets')
+        .update({ id_terminacion: idTerminacion })
+        .eq('id', id)
+        .select(dataItemTicket)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tickets',
+        error,
+        'Error al actualizar terminacion de ticket',
+      ).sendResponse();
+    },
   };
   CHAT = {
     insertChatMessage: async (
