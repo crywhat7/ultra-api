@@ -24,7 +24,7 @@ export class STORAGE_RESPONSE<T> {
       isSuccess: true,
       message: `Se subió la ${this.dataName} correctamente`,
       count,
-      [this.dataName]: this.data,
+      data: this.data as T,
     };
   }
 
@@ -33,7 +33,7 @@ export class STORAGE_RESPONSE<T> {
       isSuccess: false,
       message: this.error?.message ?? this.errorDefault,
       count: 0,
-      [this.dataName]: null,
+      data: null,
       errorCode: this.error?.error ?? 'UNKNOWN_ERROR_CODE',
     };
   }

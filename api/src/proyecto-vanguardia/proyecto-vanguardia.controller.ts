@@ -12,6 +12,7 @@ import { ProyectoVanguardiaService } from './proyecto-vanguardia.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateRolDto } from './dtos/rol.dto';
 import { CreateGeneroDto } from './dtos/genero.dto';
+import { CreateUsuarioDto } from './dtos/usuario.dto';
 
 @ApiTags('Proyecto Vanguardia - ATM')
 @Controller('atm')
@@ -65,5 +66,30 @@ export class ProyectoVanguardiaController {
   @Delete('generos/:id')
   async eliminarGenero(@Param('id', ParseIntPipe) id: number) {
     return await this.pryVanguardiaSrv.GENEROS.deleteGenero(id);
+  }
+
+  // ! Usuario
+  @Get('usuarios')
+  async getUsuarios() {
+    return await this.pryVanguardiaSrv.USUARIOS.getUsuarios();
+  }
+  @Get('usuarios/:id')
+  async getUsuario(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.USUARIOS.getUsuarioById(id);
+  }
+  @Post('usuarios')
+  async crearUsuario(@Body() body: CreateUsuarioDto) {
+    return await this.pryVanguardiaSrv.USUARIOS.createUsuario(body);
+  }
+  @Put('usuarios/:id')
+  async actualizarUsuario(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: CreateUsuarioDto,
+  ) {
+    return await this.pryVanguardiaSrv.USUARIOS.updateUsuario({ id, ...body });
+  }
+  @Delete('usuarios/:id')
+  async eliminarUsuario(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.USUARIOS.deleteUsuario(id);
   }
 }

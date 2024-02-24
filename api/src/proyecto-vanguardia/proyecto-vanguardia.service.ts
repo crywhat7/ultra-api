@@ -4,8 +4,11 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import {
   dataItemGenero,
   dataItemRol,
+  dataitemUsuario,
 } from './queries/proyecto-vanguardia.queries';
 import { DB_RESPONSE } from 'src/utils/db-response';
+import { BUCKETS, FOLDERS, UploadImages } from 'src/utils/upload-image';
+import { CreateUsuarioDto } from './dtos/usuario.dto';
 
 const ESQUEMA = 'atm';
 
@@ -107,6 +110,132 @@ export class ProyectoVanguardiaService {
       ).sendResponse();
     },
   };
+  USUARIOS = {
+    getUsuarios: async () => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('usuarios')
+        .select(dataitemUsuario);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'usuarios',
+        error,
+        'Error al obtener usuarios',
+      ).sendResponse();
+    },
+    getUsuarioById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('usuarios')
+        .select(dataitemUsuario)
+        .eq('id', id);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'usuarios',
+        error,
+        'Error al obtener usuario',
+      ).sendResponse();
+    },
+    createUsuario: async (user: CreateUsuarioDto) => {
+      const {
+        primerNombre,
+        segundoNombre,
+        primerApellido,
+        segundoApellido,
+        alias,
+        password,
+        fechaNacimiento,
+        avatarUrlBase64,
+        idRol,
+        idGenero,
+      } = user;
+      const image = await this.IMAGES.uploadImage(avatarUrlBase64);
+
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('usuarios')
+        .insert({
+          primer_nombre: primerNombre,
+          segundo_nombre: segundoNombre,
+          primer_apellido: primerApellido,
+          segundo_apellido: segundoApellido,
+          alias,
+          password,
+          fecha_nacimiento: fechaNacimiento,
+          avatar_url: image.fullPath,
+          id_rol: idRol,
+          id_genero: idGenero,
+        })
+        .select(dataitemUsuario)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'usuarios',
+        error,
+        'Error al crear usuario',
+      ).sendResponse();
+    },
+    updateUsuario: async (user: CreateUsuarioDto & { id: number }) => {
+      const {
+        id,
+        primerNombre,
+        segundoNombre,
+        primerApellido,
+        segundoApellido,
+        alias,
+        password,
+        fechaNacimiento,
+        avatarUrlBase64,
+        idRol,
+        idGenero,
+      } = user;
+      const image = await this.IMAGES.uploadImage(avatarUrlBase64);
+
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('usuarios')
+        .update({
+          primer_nombre: primerNombre,
+          segundo_nombre: segundoNombre,
+          primer_apellido: primerApellido,
+          segundo_apellido: segundoApellido,
+          alias,
+          password,
+          fecha_nacimiento: fechaNacimiento,
+          avatar_url: image.fullPath,
+          id_rol: idRol,
+          id_genero: idGenero,
+        })
+        .eq('id', id)
+        .select(dataitemUsuario)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'usuarios',
+        error,
+        'Error al actualizar usuario',
+      ).sendResponse();
+    },
+    deleteUsuario: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('usuarios')
+        .delete()
+        .eq('id', id)
+        .select(dataitemUsuario);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'usuarios',
+        error,
+        'Error al eliminar usuario',
+      ).sendResponse();
+    },
+  };
   GENEROS = {
     getGeneros: async () => {
       const { data, error } = await this.supabase
@@ -184,6 +313,16 @@ export class ProyectoVanguardiaService {
         error,
         'Error al eliminar genero',
       ).sendResponse();
+    },
+  };
+  IMAGES = {
+    uploadImage: async (base64: string) => {
+      const uploadImageUtil = new UploadImages(this.supabase);
+      return await uploadImageUtil.uploadImageBase64({
+        base64,
+        bucket: BUCKETS.ATM,
+        folder: FOLDERS.TICKETS,
+      });
     },
   };
 }

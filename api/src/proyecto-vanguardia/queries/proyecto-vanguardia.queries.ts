@@ -14,3 +14,17 @@ esAdmin: es_admin
 `;
 
 export const dataItemGenero = BASICS_WITH_DESCRIPTION;
+
+export const dataitemUsuario = `
+${BASICS},
+primerNombre: primer_nombre,
+segundoNombre: segundo_nombre,
+primerApellido: primer_apellido,
+segundoApellido: segundo_apellido,
+alias,
+password,
+fechaNacimiento: fecha_nacimiento,
+avatarUrl: avatar_url,
+rol: roles (${dataItemRol}),
+genero: generos (${dataItemGenero})
+`;
