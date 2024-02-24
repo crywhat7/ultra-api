@@ -3,12 +3,14 @@ import { SupabaseService } from 'src/db/supabase.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
   dataItemGenero,
+  dataItemPrioridad,
   dataItemRol,
   dataitemUsuario,
 } from './queries/proyecto-vanguardia.queries';
 import { DB_RESPONSE } from 'src/utils/db-response';
 import { BUCKETS, FOLDERS, UploadImages } from 'src/utils/upload-image';
 import { CreateUsuarioDto } from './dtos/usuario.dto';
+import { CreatePrioridadDto } from './dtos/prioridad.dto';
 
 const ESQUEMA = 'atm';
 
@@ -323,6 +325,84 @@ export class ProyectoVanguardiaService {
         bucket: BUCKETS.ATM,
         folder: FOLDERS.TICKETS,
       });
+    },
+  };
+
+  PRIORIDADES = {
+    getPrioridades: async () => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('prioridades')
+        .select(dataItemPrioridad)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'prioridades',
+        error,
+        'Error al obtener prioridades',
+      ).sendResponse();
+    },
+    getPrioridadById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('prioridades')
+        .select(dataItemPrioridad)
+        .eq('id', id);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'prioridades',
+        error,
+        'Error al obtener prioridad',
+      ).sendResponse();
+    },
+    crearPrioridad: async ({ descripcion }: CreatePrioridadDto) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('prioridades')
+        .insert({ descripcion })
+        .select(dataItemPrioridad);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'prioridades',
+        error,
+        'Error al crear prioridad',
+      ).sendResponse();
+    },
+    editarPrioridad: async ({
+      id,
+      descripcion,
+    }: CreatePrioridadDto & { id: number }) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('prioridades')
+        .update({ descripcion })
+        .eq('id', id)
+        .select(dataItemPrioridad);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'prioridades',
+        error,
+        'Error al editar prioridad',
+      ).sendResponse();
+    },
+    deletePrioridad: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('prioridades')
+        .delete()
+        .eq('id', id)
+        .select(dataItemPrioridad);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'prioridades',
+        error,
+        'Error al eliminar prioridad',
+      ).sendResponse();
     },
   };
 }

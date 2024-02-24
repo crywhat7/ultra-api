@@ -14,6 +14,7 @@ esAdmin: es_admin
 `;
 
 export const dataItemGenero = BASICS_WITH_DESCRIPTION;
+export const dataItemPrioridad = BASICS_WITH_DESCRIPTION;
 
 export const dataitemUsuario = `
 ${BASICS},

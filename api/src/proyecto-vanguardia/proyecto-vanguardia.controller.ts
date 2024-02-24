@@ -13,6 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateRolDto } from './dtos/rol.dto';
 import { CreateGeneroDto } from './dtos/genero.dto';
 import { CreateUsuarioDto } from './dtos/usuario.dto';
+import { CreatePrioridadDto } from './dtos/prioridad.dto';
 
 @ApiTags('Proyecto Vanguardia - ATM')
 @Controller('atm')
@@ -91,5 +92,33 @@ export class ProyectoVanguardiaController {
   @Delete('usuarios/:id')
   async eliminarUsuario(@Param('id', ParseIntPipe) id: number) {
     return await this.pryVanguardiaSrv.USUARIOS.deleteUsuario(id);
+  }
+
+  // ! Prioridades
+  @Get('prioridades')
+  async getPrioridades() {
+    return await this.pryVanguardiaSrv.PRIORIDADES.getPrioridades();
+  }
+  @Get('prioridades/:id')
+  async getPrioridad(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.PRIORIDADES.getPrioridadById(id);
+  }
+  @Post('prioridades')
+  async crearPrioridad(@Body() body: CreatePrioridadDto) {
+    return await this.pryVanguardiaSrv.PRIORIDADES.crearPrioridad(body);
+  }
+  @Put('prioridades/:id')
+  async actualizarPrioridad(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: CreatePrioridadDto,
+  ) {
+    return await this.pryVanguardiaSrv.PRIORIDADES.editarPrioridad({
+      id,
+      ...body,
+    });
+  }
+  @Delete('prioridades/:id')
+  async eliminarPrioridad(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.PRIORIDADES.deletePrioridad(id);
   }
 }
