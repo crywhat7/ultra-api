@@ -30,6 +30,24 @@ export class ProyectoVanguardiaService {
     this.supabase = this.supabaseService.supabase;
   }
 
+  LOGIN = {
+    login: async (alias: string, password: string) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('usuarios')
+        .select(dataitemUsuario)
+        .eq('alias', alias)
+        .eq('password', password);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'usuarios',
+        error,
+        'Error al iniciar sesion',
+      ).sendResponse();
+    },
+  };
+
   ROLES = {
     getRoles: async () => {
       const { data, error } = await this.supabase

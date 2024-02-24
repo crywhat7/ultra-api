@@ -24,6 +24,13 @@ import { CreateChatDto } from './dtos/chat.dto';
 @Controller('atm')
 export class ProyectoVanguardiaController {
   constructor(private readonly pryVanguardiaSrv: ProyectoVanguardiaService) {}
+
+  // ! Login
+  @Post('login')
+  async login(@Body() body: { alias: string; password: string }) {
+    return await this.pryVanguardiaSrv.LOGIN.login(body.alias, body.password);
+  }
+
   // ! Roles
   @Get('roles')
   async getRoles() {
