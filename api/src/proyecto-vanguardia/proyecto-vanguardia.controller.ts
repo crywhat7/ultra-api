@@ -14,6 +14,7 @@ import { CreateRolDto } from './dtos/rol.dto';
 import { CreateGeneroDto } from './dtos/genero.dto';
 import { CreateUsuarioDto } from './dtos/usuario.dto';
 import { CreatePrioridadDto } from './dtos/prioridad.dto';
+import { CreateEstadoDto } from './dtos/estado.dto';
 
 @ApiTags('Proyecto Vanguardia - ATM')
 @Controller('atm')
@@ -120,5 +121,30 @@ export class ProyectoVanguardiaController {
   @Delete('prioridades/:id')
   async eliminarPrioridad(@Param('id', ParseIntPipe) id: number) {
     return await this.pryVanguardiaSrv.PRIORIDADES.deletePrioridad(id);
+  }
+
+  // ! Estados
+  @Get('estados')
+  async getEstados() {
+    return await this.pryVanguardiaSrv.ESTADOS.getEstados();
+  }
+  @Get('estados/:id')
+  async getEstado(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.ESTADOS.getEstadoById(id);
+  }
+  @Post('estados')
+  async crearEstado(@Body() body: CreateEstadoDto) {
+    return await this.pryVanguardiaSrv.ESTADOS.crearEstado(body);
+  }
+  @Put('estados/:id')
+  async actualizarEstado(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: CreateEstadoDto,
+  ) {
+    return await this.pryVanguardiaSrv.ESTADOS.editarEstado({ id, ...body });
+  }
+  @Delete('estados/:id')
+  async eliminarEstado(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.ESTADOS.deleteEstado(id);
   }
 }

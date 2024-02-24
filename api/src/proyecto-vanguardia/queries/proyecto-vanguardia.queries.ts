@@ -15,6 +15,7 @@ esAdmin: es_admin
 
 export const dataItemGenero = BASICS_WITH_DESCRIPTION;
 export const dataItemPrioridad = BASICS_WITH_DESCRIPTION;
+export const dataItemEstado = `${BASICS_WITH_DESCRIPTION}, terminado`;
 
 export const dataitemUsuario = `
 ${BASICS},

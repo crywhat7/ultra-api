@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/db/supabase.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
+  dataItemEstado,
   dataItemGenero,
   dataItemPrioridad,
   dataItemRol,
@@ -11,6 +12,7 @@ import { DB_RESPONSE } from 'src/utils/db-response';
 import { BUCKETS, FOLDERS, UploadImages } from 'src/utils/upload-image';
 import { CreateUsuarioDto } from './dtos/usuario.dto';
 import { CreatePrioridadDto } from './dtos/prioridad.dto';
+import { CreateEstadoDto } from './dtos/estado.dto';
 
 const ESQUEMA = 'atm';
 
@@ -402,6 +404,85 @@ export class ProyectoVanguardiaService {
         'prioridades',
         error,
         'Error al eliminar prioridad',
+      ).sendResponse();
+    },
+  };
+
+  ESTADOS = {
+    getEstados: async () => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('estados')
+        .select(dataItemEstado)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'estados',
+        error,
+        'Error al obtener estados',
+      ).sendResponse();
+    },
+    getEstadoById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('estados')
+        .select(dataItemEstado)
+        .eq('id', id);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'estados',
+        error,
+        'Error al obtener estado',
+      ).sendResponse();
+    },
+    crearEstado: async ({ descripcion, terminado }: CreateEstadoDto) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('estados')
+        .insert({ descripcion, terminado })
+        .select(dataItemEstado);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'estados',
+        error,
+        'Error al crear estado',
+      ).sendResponse();
+    },
+    editarEstado: async ({
+      id,
+      descripcion,
+      terminado,
+    }: CreateEstadoDto & { id: number }) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('estados')
+        .update({ descripcion, terminado })
+        .eq('id', id)
+        .select(dataItemEstado);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'estados',
+        error,
+        'Error al editar estado',
+      ).sendResponse();
+    },
+    deleteEstado: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('estados')
+        .delete()
+        .eq('id', id)
+        .select(dataItemPrioridad);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'estados',
+        error,
+        'Error al eliminar estado',
       ).sendResponse();
     },
   };
