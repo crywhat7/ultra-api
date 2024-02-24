@@ -15,6 +15,7 @@ import { CreateGeneroDto } from './dtos/genero.dto';
 import { CreateUsuarioDto } from './dtos/usuario.dto';
 import { CreatePrioridadDto } from './dtos/prioridad.dto';
 import { CreateEstadoDto } from './dtos/estado.dto';
+import { CreateTerminacionDto } from './dtos/terminacion.dto';
 
 @ApiTags('Proyecto Vanguardia - ATM')
 @Controller('atm')
@@ -146,5 +147,33 @@ export class ProyectoVanguardiaController {
   @Delete('estados/:id')
   async eliminarEstado(@Param('id', ParseIntPipe) id: number) {
     return await this.pryVanguardiaSrv.ESTADOS.deleteEstado(id);
+  }
+
+  // ! Terminaciones
+  @Get('terminaciones')
+  async getTerminaciones() {
+    return await this.pryVanguardiaSrv.TERMINACIONES.getTerminaciones();
+  }
+  @Get('terminaciones/:id')
+  async getTerminacion(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.TERMINACIONES.getTerminacionById(id);
+  }
+  @Post('terminaciones')
+  async crearTerminacion(@Body() body: CreateTerminacionDto) {
+    return await this.pryVanguardiaSrv.TERMINACIONES.crearTerminacion(body);
+  }
+  @Put('terminaciones/:id')
+  async actualizarTerminacion(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: CreateTerminacionDto,
+  ) {
+    return await this.pryVanguardiaSrv.TERMINACIONES.editarTerminacion({
+      id,
+      ...body,
+    });
+  }
+  @Delete('terminaciones/:id')
+  async eliminarTerminacion(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.TERMINACIONES.deleteTerminacion(id);
   }
 }

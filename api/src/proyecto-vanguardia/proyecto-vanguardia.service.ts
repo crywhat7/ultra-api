@@ -6,6 +6,7 @@ import {
   dataItemGenero,
   dataItemPrioridad,
   dataItemRol,
+  dataItemTerminacion,
   dataitemUsuario,
 } from './queries/proyecto-vanguardia.queries';
 import { DB_RESPONSE } from 'src/utils/db-response';
@@ -13,6 +14,7 @@ import { BUCKETS, FOLDERS, UploadImages } from 'src/utils/upload-image';
 import { CreateUsuarioDto } from './dtos/usuario.dto';
 import { CreatePrioridadDto } from './dtos/prioridad.dto';
 import { CreateEstadoDto } from './dtos/estado.dto';
+import { CreateTerminacionDto } from './dtos/terminacion.dto';
 
 const ESQUEMA = 'atm';
 
@@ -483,6 +485,87 @@ export class ProyectoVanguardiaService {
         'estados',
         error,
         'Error al eliminar estado',
+      ).sendResponse();
+    },
+  };
+  TERMINACIONES = {
+    getTerminaciones: async () => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('terminaciones')
+        .select(dataItemTerminacion)
+        .order('id', { ascending: true });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'terminaciones',
+        error,
+        'Error al obtener terminaciones',
+      ).sendResponse();
+    },
+    getTerminacionById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('terminaciones')
+        .select(dataItemTerminacion)
+        .eq('id', id);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'terminaciones',
+        error,
+        'Error al obtener terminacion',
+      ).sendResponse();
+    },
+    crearTerminacion: async ({
+      descripcion,
+      fueResolutoria,
+    }: CreateTerminacionDto) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('terminaciones')
+        .insert({ descripcion, fue_resolutoria: fueResolutoria })
+        .select(dataItemTerminacion);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'terminaciones',
+        error,
+        'Error al crear terminacion',
+      ).sendResponse();
+    },
+    editarTerminacion: async ({
+      id,
+      descripcion,
+      fueResolutoria,
+    }: CreateTerminacionDto & { id: number }) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('terminaciones')
+        .update({ descripcion, fue_resolutoria: fueResolutoria })
+        .eq('id', id)
+        .select(dataItemTerminacion);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'terminaciones',
+        error,
+        'Error al editar terminacion',
+      ).sendResponse();
+    },
+    deleteTerminacion: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('terminaciones')
+        .delete()
+        .eq('id', id)
+        .select(dataItemTerminacion);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'terminaciones',
+        error,
+        'Error al eliminar terminacion',
       ).sendResponse();
     },
   };
