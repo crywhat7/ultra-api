@@ -25,9 +25,34 @@ segundoNombre: segundo_nombre,
 primerApellido: primer_apellido,
 segundoApellido: segundo_apellido,
 alias,
-password,
 fechaNacimiento: fecha_nacimiento,
 avatarUrl: avatar_url,
 rol: roles (${dataItemRol}),
 genero: generos (${dataItemGenero})
+`;
+
+export const dataItemImage = `
+${BASICS},
+idTicket: id_ticket,
+url,
+filename
+`;
+
+export const dataItemChat = `
+${BASICS},
+idTicket: id_ticket,
+usuario: usuarios (${dataitemUsuario}),
+message,
+imagen: images (${dataItemImage})
+`;
+
+export const dataItemTicket = `
+${BASICS},
+titulo,
+descripcion,
+prioridad: prioridades (${dataItemPrioridad}),
+estado: estados (${dataItemEstado}),
+terminacion: terminaciones (${dataItemTerminacion}),
+resolvedAt: resolved_at,
+messages: chat (${dataItemChat}) 
 `;

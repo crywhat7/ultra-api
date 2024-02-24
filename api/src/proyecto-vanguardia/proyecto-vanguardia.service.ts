@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/db/supabase.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 import {
+  dataItemChat,
   dataItemEstado,
   dataItemGenero,
+  dataItemImage,
   dataItemPrioridad,
   dataItemRol,
   dataItemTerminacion,
+  dataItemTicket,
   dataitemUsuario,
 } from './queries/proyecto-vanguardia.queries';
 import { DB_RESPONSE } from 'src/utils/db-response';
@@ -15,6 +18,7 @@ import { CreateUsuarioDto } from './dtos/usuario.dto';
 import { CreatePrioridadDto } from './dtos/prioridad.dto';
 import { CreateEstadoDto } from './dtos/estado.dto';
 import { CreateTerminacionDto } from './dtos/terminacion.dto';
+import { CreateTicketDto } from './dtos/ticket.dto';
 
 const ESQUEMA = 'atm';
 
@@ -566,6 +570,170 @@ export class ProyectoVanguardiaService {
         'terminaciones',
         error,
         'Error al eliminar terminacion',
+      ).sendResponse();
+    },
+  };
+  TICKETS = {
+    getTickets: async () => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('tickets')
+        .select(dataItemTicket);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tickets',
+        error,
+        'Error al obtener tickets',
+      ).sendResponse();
+    },
+    getTicketById: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('tickets')
+        .select(dataItemTicket)
+        .eq('id', id);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tickets',
+        error,
+        'Error al obtener ticket',
+      ).sendResponse();
+    },
+    deleteTicket: async (id: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('tickets')
+        .delete()
+        .eq('id', id)
+        .select(dataItemTicket);
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tickets',
+        error,
+        'Error al eliminar ticket',
+      ).sendResponse();
+    },
+    createTicket: async (ticket: CreateTicketDto) => {
+      const { titulo, descripcion, idPrioridad, postBy, imagenBase64 } = ticket;
+
+      // ! Crear el Ticket
+      const { data: nuevoTicket, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('tickets')
+        .insert({
+          titulo,
+          descripcion,
+          id_priority: idPrioridad,
+          post_by: postBy,
+        })
+        .select(dataItemTicket)
+        .single();
+
+      if (error) {
+        return new DB_RESPONSE<typeof nuevoTicket>(
+          nuevoTicket,
+          'tickets',
+          error,
+          'Error al crear ticket',
+        ).sendResponse();
+      }
+
+      const { id: idNuevoTicket } = nuevoTicket;
+
+      // ! Isertar un mensaje en el chat por parte del bot, indicando que se ha creado el ticket y con su respectiva imagen
+      const ID_USER_BOT = 1;
+      await this.CHAT.insertChatMessage(
+        idNuevoTicket,
+        ID_USER_BOT,
+        `Ticket incializado: #${idNuevoTicket}`,
+        imagenBase64,
+      );
+
+      return await this.TICKETS.getTicketById(idNuevoTicket);
+    },
+  };
+  CHAT = {
+    insertChatMessage: async (
+      ticketId: number,
+      userId: number,
+      message: string,
+      imageBase64?: string,
+    ) => {
+      let idImage: number | null = null;
+      if (imageBase64) {
+        // ! Subir la Imagen
+        const image = await this.IMAGES.uploadImage(imageBase64);
+        const { fullPath, id: filename } = image;
+
+        // ! Insertar la imagen en la tabla de imagenes
+        const {
+          data: nuevaImagen,
+          isSuccess: successImage,
+          message,
+        } = await this.TICKETS_IMAGES.insertTicketImage(
+          ticketId,
+          fullPath,
+          filename,
+        );
+        if (!successImage) {
+          this.TICKETS.deleteTicket(ticketId);
+          return new DB_RESPONSE<typeof nuevaImagen>(
+            nuevaImagen,
+            'images',
+            null,
+            message,
+          ).sendResponse();
+        }
+
+        idImage = nuevaImagen.id;
+      }
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('chat')
+        .insert({
+          id_ticket: ticketId,
+          id_usuario: userId,
+          message,
+          id_image: idImage,
+        })
+        .select(dataItemChat)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'chat',
+        error,
+        'Error al insertar mensaje en chat',
+      ).sendResponse();
+    },
+  };
+
+  TICKETS_IMAGES = {
+    insertTicketImage: async (
+      ticketId: number,
+      url: string,
+      filename: string,
+    ) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('images')
+        .insert({ id_ticket: ticketId, url, filename })
+        .select(dataItemImage)
+        .single();
+
+      console.log({
+        data,
+        error,
+      });
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tickets_images',
+        error,
+        'Error al insertar imagen de ticket',
       ).sendResponse();
     },
   };

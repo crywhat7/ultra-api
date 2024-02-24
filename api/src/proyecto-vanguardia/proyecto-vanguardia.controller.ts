@@ -16,6 +16,8 @@ import { CreateUsuarioDto } from './dtos/usuario.dto';
 import { CreatePrioridadDto } from './dtos/prioridad.dto';
 import { CreateEstadoDto } from './dtos/estado.dto';
 import { CreateTerminacionDto } from './dtos/terminacion.dto';
+import { CreateTicketDto } from './dtos/ticket.dto';
+import { CreateChatDto } from './dtos/chat.dto';
 
 @ApiTags('Proyecto Vanguardia - ATM')
 @Controller('atm')
@@ -175,5 +177,31 @@ export class ProyectoVanguardiaController {
   @Delete('terminaciones/:id')
   async eliminarTerminacion(@Param('id', ParseIntPipe) id: number) {
     return await this.pryVanguardiaSrv.TERMINACIONES.deleteTerminacion(id);
+  }
+
+  // ! Tickets
+  @Get('tickets')
+  async getTickets() {
+    return await this.pryVanguardiaSrv.TICKETS.getTickets();
+  }
+  @Get('tickets/:id')
+  async getTicket(@Param('id', ParseIntPipe) id: number) {
+    return await this.pryVanguardiaSrv.TICKETS.getTicketById(id);
+  }
+  @Post('tickets')
+  async crearTicket(@Body() body: CreateTicketDto) {
+    return await this.pryVanguardiaSrv.TICKETS.createTicket(body);
+  }
+
+  // ! Chat
+  @Post('chat')
+  async enviarMensaje(@Body() body: CreateChatDto) {
+    const { idTicket, idUsuario, message, imagenBase64 } = body;
+    return await this.pryVanguardiaSrv.CHAT.insertChatMessage(
+      idTicket,
+      idUsuario,
+      message,
+      imagenBase64,
+    );
   }
 }
