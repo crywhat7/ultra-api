@@ -1,0 +1,41 @@
+<article
+  class="p-3 bg-atm-700 text-atm-50 rounded-lg hover:bg-atm-600 hover:scale-105 transition-all"
+>
+  <header class="text-center bg-atm-800 rounded-lg mb-3">
+    {{ ticket.titulo }}
+  </header>
+  <main class="flex flex-col gap-3">
+    <p class="text-pretty">
+      {{ ticket.descripcion }}
+    </p>
+    <div class="font-bold">Prioridad: {{ ticket.prioridad.descripcion }}</div>
+    <div class="font-bold">Estado: {{ ticket.estado.descripcion }}</div>
+    <div>
+      <img
+        loading="lazy"
+        [src]="rutaImagen + ticket.messages[0].imagen?.url"
+        class="h-20 w-full object-cover rounded-lg"
+      />
+    </div>
+    <footer class="flex justify-between items-center mt-3">
+      <span
+        class="text-xs bg-atm-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
+      >
+        {{ ticket.createdAt | date : "dd/MM/yyyy" }}
+      </span>
+      @if (ticket.assignedTo) {
+      <span
+        class="text-xs bg-atm-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
+      >
+        {{ ticket.assignedTo.primerNombre }}
+      </span>
+      } @else {
+      <span
+        class="text-xs bg-red-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
+      >
+        Sin Asignar
+      </span>
+      }
+    </footer>
+  </main>
+</article>

@@ -17,7 +17,7 @@ export class DB_RESPONSE<T> {
     if (errorDefault) this.errorDefault = errorDefault;
   }
 
-  sendResponse() {
+  sendResponse(): API_RESPONSE<T> {
     if (this.error) {
       return this.sendErrorResponse();
     }
@@ -44,4 +44,12 @@ export class DB_RESPONSE<T> {
       errorCode: this.error.code || 'UNKNOWN_ERROR_CODE',
     };
   }
+}
+
+export interface API_RESPONSE<T> {
+  isSuccess: boolean;
+  message: string;
+  count: number;
+  data: T | null;
+  errorCode?: string;
 }

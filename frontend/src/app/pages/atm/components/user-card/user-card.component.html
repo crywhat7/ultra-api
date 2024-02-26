@@ -1,0 +1,29 @@
+<article class="p-2 bg-atm-50 text-atm-950 flex gap-3 items-center rounded-lg">
+  <span class="rounded-full size-12 md:size-16">
+    <img
+      class="rounded-full h-full object-cover"
+      [src]="rutaImagen + usuario.avatarUrl"
+      alt="profile-photo"
+    />
+  </span>
+  <span class="flex flex-col flex-1">
+    <h1 class="font-semibold">
+      {{ usuario.primerNombre }}
+      {{ usuario.primerApellido }}
+    </h1>
+    <small
+      class="p-1 rounded-lg uppercase self-end w-max
+                  {{
+        usuario.rol.id === 1
+          ? 'bg-purple-700 text-white'
+          : usuario.rol.id === 2
+          ? 'bg-orange-600 text-white'
+          : usuario.rol.id === 3
+          ? 'bg-blue-700 text-white'
+          : 'bg-teal-700 text-white'
+      }}"
+    >
+      {{ usuario.rol.descripcion }}
+    </small>
+  </span>
+</article>

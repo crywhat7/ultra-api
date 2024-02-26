@@ -6,9 +6,16 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginRegisterComponent } from './views/login-register/login-register.component';
 import { MainComponent } from './views/main/main.component';
+import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
+import { UserCardComponent } from './components/user-card/user-card.component';
 
 @NgModule({
-  declarations: [LoginRegisterComponent, MainComponent],
+  declarations: [
+    LoginRegisterComponent,
+    MainComponent,
+    TicketCardComponent,
+    UserCardComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,

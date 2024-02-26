@@ -33,7 +33,7 @@ export class LoginRegisterComponent {
     password: '',
     fechaNacimiento: new Date(),
     avatarUrlBase64: '',
-    idRol: 1, // 1 = Usuario
+    idRol: 3, // 4 = Usuario
     idGenero: 0,
   };
   isRegister = false;

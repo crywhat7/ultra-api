@@ -54,7 +54,7 @@ prioridad: prioridades (${dataItemPrioridad}),
 estado: estados (${dataItemEstado}),
 terminacion: terminaciones (${dataItemTerminacion}),
 resolvedAt: resolved_at,
-messages: chat (${dataItemChat} ORDER BY created_at DESC),
+messages: chat (${dataItemChat}),
 postBy: usuarios!atm_tickets_postBy_fkey(${dataitemUsuario}),
 assignedTo: usuarios!atm_tickets_asignedTo_fkey(${dataitemUsuario})
 `;

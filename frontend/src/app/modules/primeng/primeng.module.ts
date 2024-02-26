@@ -8,6 +8,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
   declarations: [],
@@ -22,6 +23,7 @@ import { InputTextModule } from 'primeng/inputtext';
     DialogModule,
     CalendarModule,
     InputTextModule,
+    ImageModule,
   ],
 })
 export class PrimeNgModule {}

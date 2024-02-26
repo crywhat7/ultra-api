@@ -73,7 +73,7 @@ idFactura: id_factura,
 producto: productos (${dataItemProducto}),
 tipoUnidad: tipos_unidades (${dataItemTipoUnidad}),
 cantidad,
-precioUnitario: precio_unitario
+precioUnitario: precio_unitario,
 subtotal
 `;
 

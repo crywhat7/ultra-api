@@ -51,49 +51,10 @@
     class="grid grid-flow-row grid-cols-1 gap-4 max-md:grid-cols-1 lg:grid-cols-3 my-10"
   >
     @for (ticket of tickets; track $index) {
-    <article
-      class="p-3 bg-atm-700 text-atm-50 rounded-lg hover:bg-atm-600 hover:scale-105 transition-all"
-    >
-      <header class="text-center bg-atm-800 rounded-lg mb-3">
-        {{ ticket.titulo }}
-      </header>
-      <main class="flex flex-col gap-3">
-        <p class="text-pretty">
-          {{ ticket.descripcion }}
-        </p>
-        <div class="font-bold">
-          Prioridad: {{ ticket.prioridad.descripcion }}
-        </div>
-        <div class="font-bold">Estado: {{ ticket.estado.descripcion }}</div>
-        <div>
-          <img
-            loading="lazy"
-            [src]="rutaImagen + ticket.messages?.[0]?.imagen?.url ?? ''"
-            class="h-20 w-full object-cover rounded-lg"
-          />
-        </div>
-        <footer class="flex justify-between items-center mt-3">
-          <span
-            class="text-xs bg-atm-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
-          >
-            {{ ticket.createdAt | date : "dd/MM/yyyy" }}
-          </span>
-          @if (ticket.assignedTo) {
-          <span
-            class="text-xs bg-atm-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
-          >
-            {{ ticket.assignedTo.primerNombre }}
-          </span>
-          } @else {
-          <span
-            class="text-xs bg-red-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
-          >
-            Sin Asignar
-          </span>
-          }
-        </footer>
-      </main>
-    </article>
+    <app-ticket-card
+      (click)="ticketSelected = ticket; visibleWorkTicket = true"
+      [ticket]="ticket"
+    ></app-ticket-card>
     }
   </section>
 </main>
@@ -115,43 +76,215 @@
           (click)="visibleCreateTicket = false"
         ></button>
       </header>
-      <section>
-        <form class="grid grid-flow-row grid-cols-1 gap-4 p-5">
-          <input
-            type="text"
-            class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all"
-            placeholder="Título"
-          />
-          <textarea
-            class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all resize-none h-40"
-            placeholder="Descripción"
-          ></textarea>
-          <p-dropdown
-            [options]="[]"
-            optionLabel="descripcion"
-            optionValue="id"
-            placeholder="Seleccionar"
-            styleClass="*:p-0 w-full bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
-          ></p-dropdown>
-          <p-dropdown
-            [options]="[]"
-            optionLabel="descripcion"
-            optionValue="id"
-            placeholder="Seleccionar"
-            styleClass="*:p-0 w-full bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
-          ></p-dropdown>
-          <input
-            type="file"
-            class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all"
-          />
-          <button
-            type="submit"
-            class="bg-atm-500 text-atm-50 p-3 rounded-lg uppercase font-semibold transition-all hover:bg-atm-600"
-          >
-            Crear Ticket
-          </button>
-        </form>
+      <section class="grid grid-flow-row grid-cols-1 gap-4 p-5">
+        <input
+          type="text"
+          [(ngModel)]="nuevoTicket.titulo"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+          placeholder="Título"
+        />
+        <textarea
+          [(ngModel)]="nuevoTicket.descripcion"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all resize-none h-40 placeholder:text-atm-300"
+          placeholder="Descripción"
+        ></textarea>
+        <p-dropdown
+          [options]="prioridades"
+          optionLabel="descripcion"
+          optionValue="id"
+          [(ngModel)]="nuevoTicket.idPrioridad"
+          placeholder="Prioridad"
+          styleClass="*:p-0 w-full bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all *:text-atm-300"
+        ></p-dropdown>
+        <div class="flex items-center space-x-6 bg-atm-700 p-2 rounded-lg">
+          <div class="shrink-0">
+            <img
+              class="h-16 w-16 object-cover rounded-full"
+              [src]="nuevoTicket.imagenBase64"
+              onerror="this.error = null; this.src='https://archive.org/download/no-photo-available//no-photo-available.png'"
+              alt="Current profile photo"
+            />
+          </div>
+          <label class="block">
+            <span class="sr-only">Escoger imagen del problema</span>
+            <input
+              type="file"
+              id="profile"
+              #fileUploaded
+              (input)="fileToBase64(fileUploaded)"
+              class="block w-full text-sm text-atm-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-atm-50 file:text-atm-700 hover:file:bg-atm-100"
+            />
+          </label>
+        </div>
+        <button
+          (click)="createTicket()"
+          class="bg-atm-500 text-atm-50 p-3 rounded-lg uppercase font-semibold transition-all hover:bg-atm-600"
+        >
+          Crear Ticket
+        </button>
       </section>
     </main>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="visibleWorkTicket"
+  [breakpoints]="{ '960px': '90dvh' }"
+  [modal]="true"
+  [maximizable]="true"
+  [responsive]="true"
+  position="top"
+>
+  <ng-template pTemplate="headless">
+    @if (!ticketSelected) {
+    <main class="bg-atm-950 rounded-lg">
+      <header class="flex justify-between items-center gap-10 p-5">
+        <h1 class="text-center text-lg font-bold">Ticket #</h1>
+        <button
+          class="rounded-full p-2 size-6 md:size-4 bg-red-700 justify-center items-center flex hover:bg-red-900 hover:scale-125 transition-all"
+          (click)="visibleWorkTicket = false"
+        ></button>
+      </header>
+      <section class="grid grid-flow-row grid-cols-1 gap-4 p-5">
+        <p class="text-center text-atm-50">
+          Selecciona un ticket para trabajar
+        </p>
+      </section>
+    </main>
+    } @else {
+    <main class="bg-atm-950 rounded-lg overflow-auto">
+      <header class="flex justify-between items-center gap-10 p-5">
+        <h1 class="text-center text-lg font-bold">
+          Ticket #{{ ticketSelected.id }}
+        </h1>
+        <button
+          class="rounded-full p-2 size-6 md:size-4 bg-red-700 justify-center items-center flex hover:bg-red-900 hover:scale-125 transition-all"
+          (click)="visibleWorkTicket = false; ticketSelected = null"
+        ></button>
+      </header>
+      <section class="flex flex-col md:flex-row gap-3 p-5">
+        <div class="flex flex-col gap-5 order-none md:order-2">
+          <h1 class="text-lg font-semibold">Información</h1>
+          <div class="flex flex-col gap-3 bg-atm-800 rounded-lg p-2">
+            <span class="w-full flex flex-col gap-3">
+              <span class="flex justify-between items-center">
+                <span> Prioridad: </span>
+                <span
+                  class="py-1 px-4 rounded-lg uppercase
+                  {{
+                    ticketSelected.prioridad.id === 1
+                      ? 'bg-red-700 text-white'
+                      : ticketSelected.prioridad.id === 2
+                      ? 'bg-orange-700 text-white'
+                      : 'bg-green-700 text-white'
+                  }}"
+                >
+                  {{ ticketSelected.prioridad.descripcion }}
+                </span>
+              </span>
+              <span class="flex justify-between items-center">
+                <span> Estado: </span>
+                <span
+                  class="py-1 px-4 rounded-lg uppercase
+                  {{
+                    ticketSelected.estado.id === 3
+                      ? 'bg-red-700 text-white'
+                      : ticketSelected.estado.id === 2
+                      ? 'bg-orange-700 text-white'
+                      : 'bg-green-700 text-white'
+                  }}"
+                >
+                  {{ ticketSelected.estado.descripcion }}
+                </span>
+              </span>
+            </span>
+          </div>
+          <div class="flex flex-col gap-3 bg-atm-800 rounded-lg p-2">
+            <span>
+              <h1>Creador Por</h1>
+              <app-user-card [usuario]="ticketSelected.postBy"></app-user-card>
+            </span>
+            <span>
+              <h1>Asignado a</h1>
+              @if (ticketSelected.assignedTo) {
+              <app-user-card
+                [usuario]="ticketSelected.assignedTo"
+              ></app-user-card>
+              } @else {
+              <span class="text-red-700">Sin Asignar</span>
+              }
+            </span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-5 order-none md:order-1">
+          <h1 class="text-lg font-semibold">Chat</h1>
+          <div class="bg-gray-900 rounded-lg p-3">
+            <!-- Lista de Mensajes -->
+            <div class="flex flex-col gap-3">
+              @for (message of ticketSelected.messages; track $index) {
+              <span
+                class="flex flex-col {{
+                  $index % 2 === 0 ? 'bg-gray-700' : 'bg-atm-700'
+                }} rounded-lg p-1"
+              >
+                <span class="flex justify-between">
+                  <span class="flex gap-1">
+                    <span class="font-semibold">from:</span>
+                    &#64;{{ message.usuario.alias }}
+                  </span>
+                  <span>
+                    {{ message.createdAt | date : "hh:mm a" }}
+                  </span>
+                </span>
+                <span>{{ message.message }}</span>
+                @if (message.imagen) {
+                <p-image
+                  [src]="rutaImagen + message.imagen.url"
+                  alt="message-image"
+                  styleClass="*:h-40 *:w-full *:object-cover *:rounded-lg"
+                  [preview]="true"
+                ></p-image>
+                <!-- <img
+                  [src]="rutaImagen + message.imagen.url"
+                  class="h-40 w-full object-cover rounded-lg"
+                /> -->
+                }
+              </span>
+
+              }
+            </div>
+            <!-- ! Enviar un nuevo mensaje -->
+            <footer class="bg-atm-900 rounded-full flex mt-4">
+              <input
+                type="text"
+                placeholder="Escribe un mensaje"
+                class="bg-atm-900 px-2 rounded-full placeholder:text-atm-200 flex-1"
+              />
+              <button class="p-2 rounded-full items-center justify-center flex">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-send"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M10 14l11 -11" />
+                  <path
+                    d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"
+                  />
+                </svg>
+              </button>
+            </footer>
+          </div>
+        </div>
+      </section>
+    </main>
+    }
   </ng-template>
 </p-dialog>

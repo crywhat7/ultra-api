@@ -494,7 +494,6 @@ export class AtmService {
             this.alertaSrv.showWarn(resp.message);
             return null;
           }
-          this.alertaSrv.showSuccess(resp.message);
           return resp.data;
         }),
         catchError((err) => {
