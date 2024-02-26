@@ -62,6 +62,8 @@ export interface Ticket {
   estado: Estado;
   terminacion: Terminacion | null;
   messages: Message[];
+  postBy: Usuario;
+  assignedTo: Usuario | null;
 }
 
 export interface Message {

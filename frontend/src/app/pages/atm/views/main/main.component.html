@@ -7,7 +7,7 @@
         alt="profile-img"
       />
     </span>
-    <span class="text-atm-50/25"> &#64;{{ userLogged.alias }} </span>
+    <span class="text-atm-50/55"> &#64;{{ userLogged.alias }} </span>
   </div>
   <div
     class="hover:scale-110 hover:bg-atm-200 rounded-full p-1 hover:text-atm-950 transition-all cursor-pointer"
@@ -34,3 +34,124 @@
     </svg>
   </div>
 </header>
+
+<main class="mx-8 mt-10">
+  <header
+    class="flex flex-col gap-3 text-center uppercase md:flex-row md:justify-between md:items-center"
+  >
+    <h1 class="font-bold">Lista de Tickets</h1>
+    <button
+      (click)="visibleCreateTicket = true"
+      class="py-2 px-4 bg-atm-800 text-atm-50 rounded-lg block hover:scale-110 hover:bg-atm-600 transition-all"
+    >
+      Crear Ticket
+    </button>
+  </header>
+  <section
+    class="grid grid-flow-row grid-cols-1 gap-4 max-md:grid-cols-1 lg:grid-cols-3 my-10"
+  >
+    @for (ticket of tickets; track $index) {
+    <article
+      class="p-3 bg-atm-700 text-atm-50 rounded-lg hover:bg-atm-600 hover:scale-105 transition-all"
+    >
+      <header class="text-center bg-atm-800 rounded-lg mb-3">
+        {{ ticket.titulo }}
+      </header>
+      <main class="flex flex-col gap-3">
+        <p class="text-pretty">
+          {{ ticket.descripcion }}
+        </p>
+        <div class="font-bold">
+          Prioridad: {{ ticket.prioridad.descripcion }}
+        </div>
+        <div class="font-bold">Estado: {{ ticket.estado.descripcion }}</div>
+        <div>
+          <img
+            loading="lazy"
+            [src]="rutaImagen + ticket.messages?.[0]?.imagen?.url ?? ''"
+            class="h-20 w-full object-cover rounded-lg"
+          />
+        </div>
+        <footer class="flex justify-between items-center mt-3">
+          <span
+            class="text-xs bg-atm-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
+          >
+            {{ ticket.createdAt | date : "dd/MM/yyyy" }}
+          </span>
+          @if (ticket.assignedTo) {
+          <span
+            class="text-xs bg-atm-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
+          >
+            {{ ticket.assignedTo.primerNombre }}
+          </span>
+          } @else {
+          <span
+            class="text-xs bg-red-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
+          >
+            Sin Asignar
+          </span>
+          }
+        </footer>
+      </main>
+    </article>
+    }
+  </section>
+</main>
+
+<p-dialog
+  [(visible)]="visibleCreateTicket"
+  [breakpoints]="{ '960px': '90dvh' }"
+  [modal]="true"
+  [maximizable]="true"
+  position="top"
+  [responsive]="true"
+>
+  <ng-template pTemplate="headless">
+    <main class="bg-atm-950 rounded-lg">
+      <header class="flex justify-between items-center gap-10 p-5">
+        <h1 class="text-center text-lg font-bold">Crear Ticket</h1>
+        <button
+          class="rounded-full p-2 size-6 md:size-4 bg-red-700 justify-center items-center flex hover:bg-red-900 hover:scale-125 transition-all"
+          (click)="visibleCreateTicket = false"
+        ></button>
+      </header>
+      <section>
+        <form class="grid grid-flow-row grid-cols-1 gap-4 p-5">
+          <input
+            type="text"
+            class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all"
+            placeholder="Título"
+          />
+          <textarea
+            class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all resize-none h-40"
+            placeholder="Descripción"
+          ></textarea>
+          <p-dropdown
+            [options]="[]"
+            optionLabel="descripcion"
+            optionValue="id"
+            placeholder="Seleccionar"
+            styleClass="*:p-0 w-full bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+          ></p-dropdown>
+          <p-dropdown
+            [options]="[]"
+            optionLabel="descripcion"
+            optionValue="id"
+            placeholder="Seleccionar"
+            styleClass="*:p-0 w-full bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+          ></p-dropdown>
+          <input
+            type="file"
+            class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all"
+          />
+          <button
+            type="submit"
+            class="bg-atm-500 text-atm-50 p-3 rounded-lg uppercase font-semibold transition-all hover:bg-atm-600"
+          >
+            Crear Ticket
+          </button>
+        </form>
+      </section>
+    </main>
+  </ng-template>
+</p-dialog>
