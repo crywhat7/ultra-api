@@ -1,0 +1,195 @@
+@if (isRegister) {
+<main class="grid place-content-center m-8">
+  <section class="bg-atm-800 p-5 rounded-lg">
+    <header
+      class="font-semibold py-2 text-center uppercase bg-atm-50 text-black rounded-lg"
+    >
+      Registrarse
+    </header>
+    <div class="w-full flex flex-col gap-3 mt-8">
+      <span class="flex flex-col">
+        <label for="primerNombre"> Primer Nombre </label>
+        <input
+          id="primerNombre"
+          type="text"
+          [(ngModel)]="register.primerNombre"
+          autofocus
+          autocomplete="off"
+          placeholder="Damaris"
+          class="bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="segundoNombre"> Segundo Nombre </label>
+        <input
+          id="segundoNombre"
+          type="text"
+          [(ngModel)]="register.segundoNombre"
+          autofocus
+          autocomplete="off"
+          placeholder="Alicia"
+          class="bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="primerApellido"> Primer Apellido </label>
+        <input
+          id="primerApellido"
+          type="text"
+          [(ngModel)]="register.primerApellido"
+          autofocus
+          autocomplete="off"
+          placeholder="Romero"
+          class="bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="segundoApellido"> Segundo Apellido </label>
+        <input
+          id="segundoApellido"
+          type="text"
+          [(ngModel)]="register.segundoApellido"
+          autofocus
+          autocomplete="off"
+          placeholder="Flores"
+          class="bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="username"> Usuario </label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="register.alias"
+          autofocus
+          autocomplete="off"
+          placeholder="arisu"
+          class="bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="password"> Contraseña </label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="register.password"
+          autofocus
+          autocomplete="off"
+          placeholder="********"
+          class="bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="fechaNacimiento"> Fecha de Nacimiento </label>
+        <p-calendar
+          id="fechaNacimiento"
+          dateFormat="dd-mm-yy"
+          [(ngModel)]="register.fechaNacimiento"
+          autofocus
+          autocomplete="off"
+          [maxDate]="fechaActual"
+          placeholder="Seleccionar"
+          [style]="{}"
+          styleClass="*:p-0 w-full bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="genero"> Genero </label>
+        <p-dropdown
+          id="genero"
+          [options]="generos"
+          optionLabel="descripcion"
+          optionValue="id"
+          [(ngModel)]="register.idGenero"
+          placeholder="Seleccionar"
+          styleClass="*:p-0 w-full bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="profile"> Foto de Perfil </label>
+        <div class="flex items-center space-x-6 bg-atm-700 p-2 rounded-lg">
+          <div class="shrink-0">
+            <img
+              class="h-16 w-16 object-cover rounded-full"
+              [src]="register.avatarUrlBase64"
+              onerror="this.error = null; this.src='https://archive.org/download/no-photo-available//no-photo-available.png'"
+              alt="Current profile photo"
+            />
+          </div>
+          <label class="block">
+            <span class="sr-only">Escoger foto de perfil</span>
+            <input
+              type="file"
+              id="profile"
+              #fileUploaded
+              (input)="fileToBase64(fileUploaded)"
+              class="block w-full text-sm text-atm-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-atm-50 file:text-atm-700 hover:file:bg-atm-100"
+            />
+          </label>
+        </div>
+      </span>
+      <button
+        (click)="registerEvent()"
+        class="bg-atm-500 text-atm-50 p-3 rounded-lg uppercase font-semibold transition-all hover:bg-atm-600 mt-8"
+      >
+        Crear Cuenta
+      </button>
+      <span
+        class="text-atm-300 hover:text-atm-200 transition-all duration-200 text-center"
+        (click)="isRegister = false"
+      >
+        ¿Ya tienes una cuenta? - ¡Iniciá Sesión!
+      </span>
+    </div>
+  </section>
+</main>
+
+} @else {
+<main class="grid place-content-center h-dvh">
+  <section class="bg-atm-800 p-5 rounded-lg">
+    <header
+      class="font-semibold py-2 text-center uppercase bg-atm-50 text-black rounded-lg"
+    >
+      Iniciar Sesión
+    </header>
+    <div class="w-full flex flex-col gap-3 mt-8">
+      <span class="flex flex-col">
+        <label for="username"> Usuario </label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="login.username"
+          autofocus
+          autocomplete="off"
+          placeholder="arisu"
+          class="bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <span class="flex flex-col">
+        <label for="password"> Contraseña </label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="login.password"
+          autofocus
+          autocomplete="off"
+          placeholder="********"
+          class="bg-atm-700 p-3 outline-none focus:ring-1 focus:ring-atm-500 placeholder:text-atm-500 rounded-lg transition-all"
+        />
+      </span>
+      <button
+        (click)="loginEvent()"
+        class="bg-atm-500 text-atm-50 p-3 rounded-lg uppercase font-semibold transition-all hover:bg-atm-600 mt-8"
+      >
+        Iniciar Sesión
+      </button>
+      <span
+        class="text-atm-300 hover:text-atm-200 transition-all duration-200"
+        (click)="isRegister = true"
+      >
+        ¿No tienes cuenta? - ¡Registrate Ya!
+      </span>
+    </div>
+  </section>
+</main>
+}

@@ -1,0 +1,36 @@
+<header class="bg-atm-950 p-3 px-4 flex justify-between items-center">
+  <div class="flex gap-4 items-center">
+    <span class="rounded-full size-8 md:size-12">
+      <img
+        class="rounded-full h-full object-cover"
+        [src]="rutaImagen + userLogged.avatarUrl"
+        alt="profile-img"
+      />
+    </span>
+    <span class="text-atm-50/25"> &#64;{{ userLogged.alias }} </span>
+  </div>
+  <div
+    class="hover:scale-110 hover:bg-atm-200 rounded-full p-1 hover:text-atm-950 transition-all cursor-pointer"
+    (click)="logout()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="icon icon-tabler icon-tabler-logout"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path
+        d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
+      />
+      <path d="M9 12h12l-3 -3" />
+      <path d="M18 15l3 -3" />
+    </svg>
+  </div>
+</header>

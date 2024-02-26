@@ -8,3 +8,18 @@
   box-sizing: border-box;
   color-scheme: dark light;
 }
+
+// Cuando es un telefono:
+@media (max-width: 768px) {
+  :host ::ng-deep {
+    p-toast {
+      div.p-toast.p-component {
+        width: 25vw !important;
+      }
+      div.p-toast-message-content {
+        display: flex;
+        flex-direction: column !important;
+      }
+    }
+  }
+}

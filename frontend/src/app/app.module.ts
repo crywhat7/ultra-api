@@ -7,6 +7,8 @@ import { AriMilModule } from './pages/ari-mil/ari-mil.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Examen1Module } from './pages/examen-1/examen-1.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PrimeNgModule } from './modules/primeng/primeng.module';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,7 +19,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     AriMilModule,
     Examen1Module,
+    PrimeNgModule,
   ],
+  providers: [MessageService],
   exports: [FormsModule, ReactiveFormsModule],
   bootstrap: [AppComponent],
 })

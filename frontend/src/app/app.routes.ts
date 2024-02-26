@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'examen-1',
+    redirectTo: 'atm',
     pathMatch: 'full',
   },
   {
@@ -23,6 +23,11 @@ const routes: Routes = [
       import('./pages/vehiculos/vehiculos.module').then(
         (m) => m.VehiculosModule
       ),
+  },
+  {
+    path: 'atm',
+    loadChildren: () =>
+      import('./pages/atm/atm.module').then((m) => m.AtmModule),
   },
 ];
 

@@ -1,1 +1,23 @@
 <router-outlet />
+<p-toast
+  key="general-alert"
+  position="top-right"
+  [breakpoints]="{
+    '720px': {
+      width: '80%',
+      right: '0',
+      left: '0',
+      'margin-left': '40px',
+      'margin-rigth': '40px',
+      'margin-top': '10px',
+    }
+  }"
+>
+  <ng-template let-message pTemplate="headless">
+    <div class="text-xs">
+      <div class="flex flex-col items-center p-2">
+        <span>{{ message.detail }}</span>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>

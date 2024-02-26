@@ -19,6 +19,7 @@ import { CreateEstadoDto } from './dtos/estado.dto';
 import { CreateTerminacionDto } from './dtos/terminacion.dto';
 import { CreateTicketDto } from './dtos/ticket.dto';
 import { CreateChatDto } from './dtos/chat.dto';
+import { LoginDto } from './dtos/login.dto';
 
 @ApiTags('Proyecto Vanguardia - ATM')
 @Controller('atm')
@@ -27,7 +28,7 @@ export class ProyectoVanguardiaController {
 
   // ! Login
   @Post('login')
-  async login(@Body() body: { alias: string; password: string }) {
+  async login(@Body() body: LoginDto) {
     return await this.pryVanguardiaSrv.LOGIN.login(body.alias, body.password);
   }
 

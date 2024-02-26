@@ -37,7 +37,8 @@ export class ProyectoVanguardiaService {
         .from('usuarios')
         .select(dataitemUsuario)
         .eq('alias', alias)
-        .eq('password', password);
+        .eq('password', password)
+        .single();
 
       return new DB_RESPONSE<typeof data>(
         data,
