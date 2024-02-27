@@ -131,7 +131,6 @@
   [(visible)]="visibleWorkTicket"
   [breakpoints]="{ '960px': '90dvh' }"
   [modal]="true"
-  [maximizable]="true"
   [responsive]="true"
   position="top"
 >
@@ -163,8 +162,14 @@
         ></button>
       </header>
       <section class="flex flex-col md:flex-row gap-3 p-5">
-        <div class="flex flex-col gap-5 order-none md:order-2">
+        <div class="flex flex-col gap-5 order-none md:order-2 md:max-w-80">
           <h1 class="text-lg font-semibold">Información</h1>
+          <div class="flex flex-col gap-3 bg-atm-800 rounded-lg p-2">
+            <!-- Titulo -->
+            <h1 class="font-semibold">{{ ticketSelected.titulo }}</h1>
+            <!-- Descripcion -->
+            <p class="text-atm-50">{{ ticketSelected.descripcion }}</p>
+          </div>
           <div class="flex flex-col gap-3 bg-atm-800 rounded-lg p-2">
             <span class="w-full flex flex-col gap-3">
               <span class="flex justify-between items-center">
@@ -216,51 +221,28 @@
             </span>
           </div>
         </div>
-        <div class="flex flex-col gap-5 order-none md:order-1">
+        <div class="flex flex-col gap-5 order-none md:order-1 md:min-h-[35rem]">
           <h1 class="text-lg font-semibold">Chat</h1>
-          <div class="bg-gray-900 rounded-lg p-3">
+          <div
+            class="bg-gray-900 rounded-lg p-3 flex flex-col justify-between h-full"
+          >
             <!-- Lista de Mensajes -->
             <div class="flex flex-col gap-3">
               @for (message of ticketSelected.messages; track $index) {
-              <span
-                class="flex flex-col {{
-                  $index % 2 === 0 ? 'bg-gray-700' : 'bg-atm-700'
-                }} rounded-lg p-1"
-              >
-                <span class="flex justify-between">
-                  <span class="flex gap-1">
-                    <span class="font-semibold">from:</span>
-                    &#64;{{ message.usuario.alias }}
-                  </span>
-                  <span>
-                    {{ message.createdAt | date : "hh:mm a" }}
-                  </span>
-                </span>
-                <span>{{ message.message }}</span>
-                @if (message.imagen) {
-                <p-image
-                  [src]="rutaImagen + message.imagen.url"
-                  alt="message-image"
-                  styleClass="*:h-40 *:w-full *:object-cover *:rounded-lg"
-                  [preview]="true"
-                ></p-image>
-                <!-- <img
-                  [src]="rutaImagen + message.imagen.url"
-                  class="h-40 w-full object-cover rounded-lg"
-                /> -->
-                }
-              </span>
-
+              <app-message-chat [message]="message"> </app-message-chat>
               }
             </div>
             <!-- ! Enviar un nuevo mensaje -->
-            <footer class="bg-atm-900 rounded-full flex mt-4">
-              <input
-                type="text"
+            <footer class="bg-atm-900 rounded-full flex mt-4 items-center">
+              <textarea
                 placeholder="Escribe un mensaje"
-                class="bg-atm-900 px-2 rounded-full placeholder:text-atm-200 flex-1"
-              />
-              <button class="p-2 rounded-full items-center justify-center flex">
+                [(ngModel)]="nuevoMensaje.message"
+                class="bg-atm-900 p-2 pl-5 rounded-full placeholder:text-atm-200 flex-1 outline-none resize-none"
+              ></textarea>
+              <button
+                class="p-2 border size-12 rounded-full items-center justify-center flex hover:scale-105 transition-all mr-3"
+                (click)="nuevoMensajeEvent()"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="icon icon-tabler icon-tabler-send"

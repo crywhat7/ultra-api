@@ -604,7 +604,9 @@ export class AtmService {
       sessionStorage.setItem(USER_LOGGED_ATM, JSON.stringify(user));
     },
     getUser: () => {
-      return JSON.parse(sessionStorage.getItem(USER_LOGGED_ATM) || '{}');
+      return JSON.parse(
+        sessionStorage.getItem(USER_LOGGED_ATM) || '{}'
+      ) as Usuario;
     },
   };
 }

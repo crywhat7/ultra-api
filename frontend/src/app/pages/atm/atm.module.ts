@@ -8,6 +8,7 @@ import { LoginRegisterComponent } from './views/login-register/login-register.co
 import { MainComponent } from './views/main/main.component';
 import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
 import { UserCardComponent } from './components/user-card/user-card.component';
+import { MessageChatComponent } from './components/message-chat/message-chat.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { UserCardComponent } from './components/user-card/user-card.component';
     MainComponent,
     TicketCardComponent,
     UserCardComponent,
+    MessageChatComponent,
   ],
   imports: [
     CommonModule,

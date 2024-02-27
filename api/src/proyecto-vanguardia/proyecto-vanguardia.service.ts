@@ -611,7 +611,8 @@ export class ProyectoVanguardiaService {
         .schema(ESQUEMA)
         .from('tickets')
         .select(dataItemTicket)
-        .eq('id', id);
+        .eq('id', id)
+        .single();
 
       return new DB_RESPONSE<typeof data>(
         data,

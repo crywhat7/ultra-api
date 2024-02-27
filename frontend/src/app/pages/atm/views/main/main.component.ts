@@ -1,7 +1,13 @@
 import { Component } from '@angular/core';
 import { AlertaService } from '../../../../services/alerta.service';
 import { AtmService } from '../../services/atm.service';
-import { CreateTicket, Prioridad, Ticket, Usuario } from '../../types/atm';
+import {
+  CreateChat,
+  CreateTicket,
+  Prioridad,
+  Ticket,
+  Usuario,
+} from '../../types/atm';
 import { IMAGES_ATM_BUCKET } from '../../../../../config/config';
 
 @Component({
@@ -23,6 +29,13 @@ export class MainComponent {
   };
   visibleCreateTicket = false;
   visibleWorkTicket = false;
+  nuevoMensaje: CreateChat = {
+    message: '',
+    idUsuario: 0,
+    idTicket: 0,
+    imagenBase64: '',
+  };
+
   constructor(
     private atmService: AtmService,
     private alertaService: AlertaService
@@ -30,6 +43,14 @@ export class MainComponent {
     this.getUserLogged();
     this.getPrioridades();
     this.getTickets();
+    this.intervalTicketSelecionado();
+  }
+
+  intervalTicketSelecionado() {
+    setInterval(() => {
+      if (!this.ticketSelected) return;
+      this.getTicketSelected();
+    }, 10000);
   }
   getUserLogged() {
     this.userLogged = this.atmService.SESSION_STORAGE.getUser();
@@ -40,21 +61,38 @@ export class MainComponent {
   getTickets() {
     this.atmService.TICKETS.getTickets().subscribe((response) => {
       if (!response) return;
-      this.tickets = response.filter(
-        (ticket) => ticket.postBy.id === this.userLogged.id
-      );
+
+      const { esAdmin } = this.userLogged.rol;
+
+      console.log('esAdmin', esAdmin);
+
+      this.tickets = response;
+
+      if (!esAdmin) {
+        this.tickets = response.filter(
+          (ticket) => ticket.postBy.id === this.userLogged.id
+        );
+      }
+
+      if (this.ticketSelected) {
+        this.ticketSelected = this.tickets.find(
+          (ticket) => ticket.id === this.ticketSelected?.id
+        );
+      }
+
+      // ! Eliminar esta línea
       [this.ticketSelected] = this.tickets;
-      const [firstMessage] = structuredClone(this.ticketSelected.messages);
-
-      firstMessage.imagen = null;
-
-      this.ticketSelected.messages.push(firstMessage);
-      this.ticketSelected.messages.push(firstMessage);
-      this.ticketSelected.messages.push(firstMessage);
-      this.ticketSelected.messages.push(firstMessage);
-      this.ticketSelected.messages.push(firstMessage);
       this.visibleWorkTicket = true;
     });
+  }
+  getTicketSelected() {
+    if (!this.ticketSelected) return;
+    this.atmService.TICKETS.getTicket(this.ticketSelected.id).subscribe(
+      (response) => {
+        if (!response) return;
+        this.ticketSelected = response;
+      }
+    );
   }
   fileToBase64(event: HTMLInputElement) {
     // From HTMLInputElement to a Base64 that can be viewed in img tag
@@ -64,6 +102,17 @@ export class MainComponent {
     const reader = new FileReader();
     reader.onload = (e) => {
       this.nuevoTicket.imagenBase64 = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+  fileMessageToBase64(event: HTMLInputElement) {
+    // From HTMLInputElement to a Base64 that can be viewed in img tag
+    const file = event.files?.item(0);
+
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.nuevoMensaje.imagenBase64 = e.target?.result as string;
     };
     reader.readAsDataURL(file);
   }
@@ -107,6 +156,29 @@ export class MainComponent {
           postBy: 0,
           titulo: '',
         };
+      }
+    );
+  }
+  nuevoMensajeEvent() {
+    if (!this.nuevoMensaje.message) {
+      this.alertaService.showWarn('El mensaje es requerido');
+      return;
+    }
+    this.nuevoMensaje.idUsuario = this.userLogged.id;
+    this.nuevoMensaje.idTicket = this.ticketSelected?.id || 0;
+
+    this.atmService.TICKETS_CHAT.postChat(this.nuevoMensaje).subscribe(
+      (response) => {
+        if (!response) return;
+        this.alertaService.showSuccess('Mensaje enviado con éxito');
+        this.nuevoMensaje = {
+          message: '',
+          idUsuario: 0,
+          idTicket: 0,
+          imagenBase64: '',
+        };
+
+        this.getTicketSelected();
       }
     );
   }

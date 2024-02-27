@@ -1,0 +1,32 @@
+<article
+  class="flex flex-col {{
+    currentUser.id === message.usuario.id ? 'bg-atm-700' : 'bg-gray-700'
+  }} rounded-lg p-1"
+>
+  <span class="flex justify-between">
+    <span class="flex gap-1 items-center">
+      <span class="rounded-full size-8 md:size-12">
+        <img
+          class="rounded-full h-full object-cover"
+          [src]="rutaImagen + message.usuario.avatarUrl"
+          alt="profile-photo"
+        />
+      </span>
+      <span class="font-normal"> &#64;{{ message.usuario.alias }} </span>
+    </span>
+    <span>
+      {{ message.createdAt | date : "hh:mm a" }}
+    </span>
+  </span>
+  <span>{{ message.message }}</span>
+  @if (message.imagen) {
+  <span class="w-full h-40 overflow-auto rounded-lg">
+    <p-image
+      styleClass="rounded-lg w-full"
+      [src]="rutaImagen + message.imagen.url"
+      alt="message-image"
+      [preview]="true"
+    ></p-image>
+  </span>
+  }
+</article>
