@@ -9,7 +9,15 @@
       {{ ticket.descripcion }}
     </p>
     <div class="font-bold">Prioridad: {{ ticket.prioridad.descripcion }}</div>
-    <div class="font-bold">Estado: {{ ticket.estado.descripcion }}</div>
+    <div class="font-bold {{ ticket.estado.terminado ? 'text-red-300' : '' }}">
+      Estado: {{ ticket.estado.descripcion }}
+    </div>
+    @if (ticket.terminacion) {
+    <div class="font-bold">
+      Terminación: {{ ticket.terminacion.descripcion | date : "dd/MM/yyyy" }} el
+      {{ ticket.terminacion.createdAt | date : "dd/MM/yyyy" }}
+    </div>
+    }
     <div>
       <img
         loading="lazy"

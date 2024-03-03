@@ -218,6 +218,16 @@ export class ProyectoVanguardiaController {
   ) {
     return await this.pryVanguardiaSrv.TICKETS.updateStatusTicket(id, idEstado);
   }
+  @Patch('tickets/:id/asignar/:idUsuario')
+  async asignarTicket(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('idUsuario', ParseIntPipe) idUsuario: number,
+  ) {
+    return await this.pryVanguardiaSrv.TICKETS.updateAssignedUserTicket(
+      id,
+      idUsuario,
+    );
+  }
 
   // ! Chat
   @Post('chat')

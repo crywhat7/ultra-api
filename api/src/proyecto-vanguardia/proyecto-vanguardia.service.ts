@@ -691,10 +691,15 @@ export class ProyectoVanguardiaService {
       ).sendResponse();
     },
     updateTerminacionTicket: async (id: number, idTerminacion: number) => {
+      const id_status = [2, 3].includes(idTerminacion) ? 4 : 3;
       const { data, error } = await this.supabase
         .schema(ESQUEMA)
         .from('tickets')
-        .update({ id_terminacion: idTerminacion })
+        .update({
+          id_terminacion: idTerminacion,
+          resolved_at: new Date(),
+          id_status,
+        })
         .eq('id', id)
         .select(dataItemTicket)
         .single();
@@ -704,6 +709,22 @@ export class ProyectoVanguardiaService {
         'tickets',
         error,
         'Error al actualizar terminacion de ticket',
+      ).sendResponse();
+    },
+    updateAssignedUserTicket: async (id: number, idUsuario: number) => {
+      const { data, error } = await this.supabase
+        .schema(ESQUEMA)
+        .from('tickets')
+        .update({ asigned_to: idUsuario, id_status: 2 })
+        .eq('id', id)
+        .select(dataItemTicket)
+        .single();
+
+      return new DB_RESPONSE<typeof data>(
+        data,
+        'tickets',
+        error,
+        'Error al actualizar usuario asignado de ticket',
       ).sendResponse();
     },
   };

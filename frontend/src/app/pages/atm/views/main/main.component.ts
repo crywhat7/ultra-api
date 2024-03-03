@@ -4,7 +4,9 @@ import { AtmService } from '../../services/atm.service';
 import {
   CreateChat,
   CreateTicket,
+  Estado,
   Prioridad,
+  Terminacion,
   Ticket,
   Usuario,
 } from '../../types/atm';
@@ -19,6 +21,8 @@ export class MainComponent {
   rutaImagen = IMAGES_ATM_BUCKET;
   tickets: Ticket[] = [];
   ticketSelected?: Ticket | null = null;
+  terminaciones: Terminacion[] = [];
+  terminacionSelected?: Terminacion | null = null;
   prioridades: Prioridad[] = [];
   nuevoTicket: CreateTicket = {
     descripcion: '',
@@ -42,6 +46,7 @@ export class MainComponent {
   ) {
     this.getUserLogged();
     this.getPrioridades();
+    this.getTerminaciones();
     this.getTickets();
     this.intervalTicketSelecionado();
   }
@@ -64,8 +69,6 @@ export class MainComponent {
 
       const { esAdmin } = this.userLogged.rol;
 
-      console.log('esAdmin', esAdmin);
-
       this.tickets = response;
 
       if (!esAdmin) {
@@ -81,8 +84,8 @@ export class MainComponent {
       }
 
       // ! Eliminar esta línea
-      [this.ticketSelected] = this.tickets;
-      this.visibleWorkTicket = true;
+      // [this.ticketSelected] = this.tickets;
+      // this.visibleWorkTicket = true;
     });
   }
   getTicketSelected() {
@@ -121,6 +124,65 @@ export class MainComponent {
       (response) => {
         if (!response) return;
         this.prioridades = response;
+      }
+    );
+  }
+  getTerminaciones() {
+    this.atmService.TICKETS_TERMINACIONES.getTerminaciones().subscribe(
+      (response) => {
+        if (!response) return;
+        this.terminaciones = response;
+      }
+    );
+  }
+  updateAsignedTicket() {
+    if (!this.ticketSelected) return;
+    const { id } = this.userLogged;
+    const { id: idTicket } = this.ticketSelected;
+
+    if (this.ticketSelected.estado.terminado) {
+      this.alertaService.showWarn('El ticket ya ha sido terminado');
+      return;
+    }
+
+    if (!id) {
+      this.alertaService.showWarn('El usuario no está logueado');
+      return;
+    }
+
+    if (!idTicket) {
+      this.alertaService.showWarn('El ticket no está seleccionado');
+      return;
+    }
+
+    this.atmService.TICKETS.updateTicketAsignacion(idTicket, id).subscribe(
+      (response) => {
+        if (!response) return;
+        this.alertaService.showSuccess('Ticket actualizado con éxito');
+        this.getTickets();
+      }
+    );
+  }
+  terminarTicket() {
+    if (!this.ticketSelected) return;
+    const { id } = this.terminacionSelected || {};
+    const { id: idTicket } = this.ticketSelected;
+
+    if (!id) {
+      this.alertaService.showWarn('La terminación no está seleccionada');
+      return;
+    }
+
+    if (!idTicket) {
+      this.alertaService.showWarn('El ticket no está seleccionado');
+      return;
+    }
+
+    this.atmService.TICKETS.updateTicketTerminacion(idTicket, id).subscribe(
+      (response) => {
+        if (!response) return;
+        this.alertaService.showSuccess('Ticket actualizado con éxito');
+        this.getTickets();
       }
     );
   }
@@ -164,8 +226,19 @@ export class MainComponent {
       this.alertaService.showWarn('El mensaje es requerido');
       return;
     }
+    const ticket = this.ticketSelected;
+    if (!ticket) {
+      this.alertaService.showWarn('El ticket no está seleccionado');
+      return;
+    }
     this.nuevoMensaje.idUsuario = this.userLogged.id;
-    this.nuevoMensaje.idTicket = this.ticketSelected?.id || 0;
+    this.nuevoMensaje.idTicket = ticket.id || 0;
+
+    const { terminacion } = ticket;
+    if (terminacion) {
+      this.alertaService.showWarn('El ticket ya ha sido terminado');
+      return;
+    }
 
     this.atmService.TICKETS_CHAT.postChat(this.nuevoMensaje).subscribe(
       (response) => {

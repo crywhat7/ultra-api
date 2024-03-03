@@ -534,6 +534,23 @@ export class AtmService {
         })
       );
     },
+    updateTicketAsignacion: (id: number, idUsuario: number) => {
+      const ruta = `${URL_BASE}/tickets/${id}/asignar/${idUsuario}`;
+      return this.http.patch<APIResponse<Ticket>>(ruta, {}).pipe(
+        map((resp) => {
+          if (!resp.isSuccess) {
+            this.alertaSrv.showWarn(resp.message);
+            return null;
+          }
+          this.alertaSrv.showSuccess(resp.message);
+          return resp.data;
+        }),
+        catchError((err) => {
+          this.alertaSrv.showError(err?.error?.message ?? 'Error desconocido');
+          throw err;
+        })
+      );
+    },
     updateTicketStatus: (id: number, idEstado: number) => {
       const ruta = `${URL_BASE}/tickets/${id}/estado/${idEstado}`;
       return this.http.patch<APIResponse<Ticket>>(ruta, {}).pipe(
