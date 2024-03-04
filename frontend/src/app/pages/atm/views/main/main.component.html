@@ -1,39 +1,4 @@
-<header class="bg-atm-950 p-3 px-4 flex justify-between items-center">
-  <div class="flex gap-4 items-center">
-    <span class="rounded-full size-8 md:size-12">
-      <img
-        class="rounded-full h-full object-cover"
-        [src]="rutaImagen + userLogged.avatarUrl"
-        alt="profile-img"
-      />
-    </span>
-    <span class="text-atm-50/55"> &#64;{{ userLogged.alias }} </span>
-  </div>
-  <div
-    class="hover:scale-110 hover:bg-atm-200 rounded-full p-1 hover:text-atm-950 transition-all cursor-pointer"
-    (click)="logout()"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="icon icon-tabler icon-tabler-logout"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      fill="none"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path
-        d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
-      />
-      <path d="M9 12h12l-3 -3" />
-      <path d="M18 15l3 -3" />
-    </svg>
-  </div>
-</header>
+<app-header></app-header>
 
 <main class="mx-8 mt-10">
   <header
@@ -41,12 +6,28 @@
   >
     <h1 class="font-bold">Lista de Tickets</h1>
 
-    <button
-      (click)="visibleCreateTicket = true"
-      class="py-2 px-4 bg-atm-800 text-atm-50 rounded-lg block hover:scale-110 hover:bg-atm-600 transition-all"
-    >
+    <atm-button type="primary" (click)="visibleCreateTicket = true">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon icon-tabler icon-tabler-square-rounded-plus"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path
+          d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"
+        />
+        <path d="M15 12h-6" />
+        <path d="M12 9v6" />
+      </svg>
       Crear Ticket
-    </button>
+    </atm-button>
   </header>
   <section
     class="grid grid-flow-row grid-cols-1 gap-4 max-md:grid-cols-1 lg:grid-cols-3 my-10"
@@ -117,12 +98,33 @@
             />
           </label>
         </div>
-        <button
+        <atm-button
+          [loading]="loaders.createTicket"
           (click)="createTicket()"
-          class="bg-atm-500 text-atm-50 p-3 rounded-lg uppercase font-semibold transition-all hover:bg-atm-600"
+          type="success"
+          className="w-full"
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon icon-tabler icon-tabler-square-rounded-plus"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"
+            />
+            <path d="M15 12h-6" />
+            <path d="M12 9v6" />
+          </svg>
           Crear Ticket
-        </button>
+        </atm-button>
       </section>
     </main>
   </ng-template>

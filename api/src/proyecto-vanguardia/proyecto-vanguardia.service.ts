@@ -55,7 +55,7 @@ export class ProyectoVanguardiaService {
         .schema(ESQUEMA)
         .from('roles')
         .select(dataItemRol)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       return new DB_RESPONSE<typeof data>(
         data,
@@ -597,7 +597,8 @@ export class ProyectoVanguardiaService {
       const { data, error } = await this.supabase
         .schema(ESQUEMA)
         .from('tickets')
-        .select(dataItemTicket);
+        .select(dataItemTicket)
+        .order('created_at', { ascending: false });
 
       return new DB_RESPONSE<typeof data>(
         data,

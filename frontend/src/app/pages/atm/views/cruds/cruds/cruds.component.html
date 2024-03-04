@@ -1,0 +1,768 @@
+<app-header></app-header>
+<main class="mx-8 mt-10">
+  <section class="grid grid-cols-2 gap-4">
+    <!-- ! Tabla de Estados -->
+    <div class="bg-atm-950 rounded-lg p-2">
+      <header class="font-semibold text-xl flex justify-between" #headerEstados>
+        Estados
+        <svg
+          (click)="opNuevoEstado.toggle($event, headerEstados)"
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-circle-plus hover:scale-110 transition-all cursor-pointer"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+          <path d="M9 12h6" />
+          <path d="M12 9v6" />
+        </svg>
+      </header>
+
+      <div class="relative overflow-x-auto mt-4">
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3">ID</th>
+              <th scope="col" class="px-6 py-3">Descripción</th>
+              <th scope="col" class="px-6 py-3">Terminado</th>
+              <th scope="col" class="px-6 py-3 text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (estado of estados; track $index) {
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                {{ estado.id }}
+              </th>
+              <td class="px-6 py-2">
+                <input
+                  type="text"
+                  class="outline-none bg-transparent font-bold dark:text-white text-gray-900 focus:ring-1 focus:ring-atm-500 transition-all rounded-lg p-2"
+                  [(ngModel)]="estado.descripcion"
+                />
+              </td>
+              <td class="px-6 py-4">
+                <atm-badge
+                  (click)="estado.terminado = !estado.terminado"
+                  [type]="estado.terminado ? 'green' : 'red'"
+                  [subtle]="true"
+                >
+                  {{ estado.terminado ? "Terminado" : "No terminado" }}
+                </atm-badge>
+              </td>
+              <td class="px-6 py-4 flex justify-end">
+                <svg
+                  (click)="updateEstado(estado)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Editar Estado"
+                  class="text-green-500 hover:scale-110 hover:text-green-600 cursor-pointer mr-2"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"
+                  />
+                  <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M14 4l0 4l-6 0l0 -4" />
+                </svg>
+                <svg
+                  (click)="deleteEstado(estado.id)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Eliminar Estado"
+                  class="text-red-500 hover:scale-110 hover:text-red-600 cursor-pointer"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M4 7l16 0" />
+                  <path d="M10 11l0 6" />
+                  <path d="M14 11l0 6" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                </svg>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- ! Tabla de Prioridades -->
+    <div class="bg-atm-950 rounded-lg p-2">
+      <header
+        class="font-semibold text-xl flex justify-between"
+        #headerPrioridades
+      >
+        Prioridades
+        <svg
+          (click)="opNuevaPrioridad.toggle($event, headerPrioridades)"
+          class="icon icon-tabler icon-tabler-circle-plus hover:scale-110 transition-all cursor-pointer"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+          <path d="M9 12h6" />
+          <path d="M12 9v6" />
+        </svg>
+      </header>
+
+      <div class="relative overflow-x-auto mt-4">
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3">ID</th>
+              <th scope="col" class="px-6 py-3">Descripción</th>
+              <th scope="col" class="px-6 py-3 text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (prioridad of prioridades; track $index) {
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                {{ prioridad.id }}
+              </th>
+              <td class="px-6 py-2">
+                <input
+                  type="text"
+                  class="outline-none bg-transparent font-bold dark:text-white text-gray-900 focus:ring-1 focus:ring-atm-500 transition-all rounded-lg p-2"
+                  [(ngModel)]="prioridad.descripcion"
+                />
+              </td>
+
+              <td class="px-6 py-4 flex justify-end">
+                <svg
+                  (click)="updatePrioridad(prioridad)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Editar Estado"
+                  class="text-green-500 hover:scale-110 hover:text-green-600 cursor-pointer mr-2"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"
+                  />
+                  <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M14 4l0 4l-6 0l0 -4" />
+                </svg>
+                <svg
+                  (click)="deletePrioridad(prioridad.id)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Eliminar Estado"
+                  class="text-red-500 hover:scale-110 hover:text-red-600 cursor-pointer"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M4 7l16 0" />
+                  <path d="M10 11l0 6" />
+                  <path d="M14 11l0 6" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                </svg>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- ! Tabla de Terminaciones -->
+    <div class="bg-atm-950 rounded-lg p-2">
+      <header
+        class="font-semibold text-xl flex justify-between"
+        #headerTerminaciones
+      >
+        Terminaciones
+        <svg
+          (click)="opNuevaTerminacion.toggle($event, headerTerminaciones)"
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-circle-plus hover:scale-110 transition-all cursor-pointer"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+          <path d="M9 12h6" />
+          <path d="M12 9v6" />
+        </svg>
+      </header>
+
+      <div class="relative overflow-x-auto mt-4">
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3">ID</th>
+              <th scope="col" class="px-6 py-3">Descripción</th>
+              <th scope="col" class="px-6 py-3">Terminado</th>
+              <th scope="col" class="px-6 py-3 text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (terminacion of terminaciones; track $index) {
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                {{ terminacion.id }}
+              </th>
+              <td class="px-6 py-2">
+                <input
+                  type="text"
+                  class="outline-none bg-transparent font-bold dark:text-white text-gray-900 focus:ring-1 focus:ring-atm-500 transition-all rounded-lg p-2"
+                  [(ngModel)]="terminacion.descripcion"
+                />
+              </td>
+              <td class="px-6 py-4">
+                <atm-badge
+                  (click)="
+                    terminacion.fueResolutoria = !terminacion.fueResolutoria
+                  "
+                  [type]="terminacion.fueResolutoria ? 'green' : 'red'"
+                  [subtle]="true"
+                >
+                  {{
+                    terminacion.fueResolutoria
+                      ? "Resolutoria"
+                      : "No resolutoria"
+                  }}
+                </atm-badge>
+              </td>
+              <td class="px-6 py-4 flex justify-end">
+                <svg
+                  (click)="updateTerminacion(terminacion)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Editar Terminacione"
+                  class="text-green-500 hover:scale-110 hover:text-green-600 cursor-pointer mr-2"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"
+                  />
+                  <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M14 4l0 4l-6 0l0 -4" />
+                </svg>
+                <svg
+                  (click)="deleteTerminacion(terminacion.id)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Eliminar Estado"
+                  class="text-red-500 hover:scale-110 hover:text-red-600 cursor-pointer"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M4 7l16 0" />
+                  <path d="M10 11l0 6" />
+                  <path d="M14 11l0 6" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                </svg>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- ! Tabla de Generos -->
+    <div class="bg-atm-950 rounded-lg p-2">
+      <header class="font-semibold text-xl flex justify-between" #headerGeneros>
+        Generos
+        <svg
+          (click)="opNuevoGenero.toggle($event, headerGeneros)"
+          class="icon icon-tabler icon-tabler-circle-plus hover:scale-110 transition-all cursor-pointer"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+          <path d="M9 12h6" />
+          <path d="M12 9v6" />
+        </svg>
+      </header>
+
+      <div class="relative overflow-x-auto mt-4">
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3">ID</th>
+              <th scope="col" class="px-6 py-3">Descripción</th>
+              <th scope="col" class="px-6 py-3 text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (genero of generos; track $index) {
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                {{ genero.id }}
+              </th>
+              <td class="px-6 py-2">
+                <input
+                  type="text"
+                  class="outline-none bg-transparent font-bold dark:text-white text-gray-900 focus:ring-1 focus:ring-atm-500 transition-all rounded-lg p-2"
+                  [(ngModel)]="genero.descripcion"
+                />
+              </td>
+
+              <td class="px-6 py-4 flex justify-end">
+                <svg
+                  (click)="updateGenero(genero)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Editar Estado"
+                  class="text-green-500 hover:scale-110 hover:text-green-600 cursor-pointer mr-2"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"
+                  />
+                  <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M14 4l0 4l-6 0l0 -4" />
+                </svg>
+                <svg
+                  (click)="deleteGenero(genero.id)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Eliminar Estado"
+                  class="text-red-500 hover:scale-110 hover:text-red-600 cursor-pointer"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M4 7l16 0" />
+                  <path d="M10 11l0 6" />
+                  <path d="M14 11l0 6" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                </svg>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- ! Tabla de Roles -->
+    <div class="bg-atm-950 rounded-lg p-2">
+      <header class="font-semibold text-xl flex justify-between" #headerRoles>
+        Roles
+        <svg
+          (click)="opNuevoRol.toggle($event, headerRoles)"
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-circle-plus hover:scale-110 transition-all cursor-pointer"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+          <path d="M9 12h6" />
+          <path d="M12 9v6" />
+        </svg>
+      </header>
+
+      <div class="relative overflow-x-auto mt-4">
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3">ID</th>
+              <th scope="col" class="px-6 py-3">Descripción</th>
+              <th scope="col" class="px-6 py-3">Es admin</th>
+              <th scope="col" class="px-6 py-3 text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (rol of roles; track $index) {
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                {{ rol.id }}
+              </th>
+              <td class="px-6 py-2">
+                <input
+                  type="text"
+                  class="outline-none bg-transparent font-bold dark:text-white text-gray-900 focus:ring-1 focus:ring-atm-500 transition-all rounded-lg p-2"
+                  [(ngModel)]="rol.descripcion"
+                />
+              </td>
+              <td class="px-6 py-4">
+                <atm-badge
+                  (click)="rol.esAdmin = !rol.esAdmin"
+                  [type]="rol.esAdmin ? 'green' : 'red'"
+                  [subtle]="true"
+                >
+                  {{ rol.esAdmin ? "Es Admin" : "No es Admin" }}
+                </atm-badge>
+              </td>
+              <td class="px-6 py-4 flex justify-end">
+                <svg
+                  (click)="updateRol(rol)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Editar Terminacione"
+                  class="text-green-500 hover:scale-110 hover:text-green-600 cursor-pointer mr-2"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path
+                    d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"
+                  />
+                  <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M14 4l0 4l-6 0l0 -4" />
+                </svg>
+                <svg
+                  (click)="deleteTerminacion(rol.id)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  pTooltip="Eliminar Estado"
+                  class="text-red-500 hover:scale-110 hover:text-red-600 cursor-pointer"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M4 7l16 0" />
+                  <path d="M10 11l0 6" />
+                  <path d="M14 11l0 6" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                </svg>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<p-overlayPanel #opNuevoEstado>
+  <ng-template pTemplate="content">
+    <main class="rounded-lg flex flex-col gap-3">
+      <h1 class="font-bold">Nuevo Estado</h1>
+      <span class="flex flex-col gap-1">
+        <label for="descripcion"> Descripción </label>
+        <input
+          type="text"
+          id="descripcion"
+          placeholder="Ingresar descripción del estado"
+          [(ngModel)]="newEstado.descripcion"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+        />
+      </span>
+      <span class="flex gap-1 justify-between">
+        <label
+          for="descripcion"
+          (click)="newEstado.terminado = !newEstado.terminado"
+        >
+          ¿Está terminada?
+        </label>
+        <input
+          type="checkbox"
+          id="descripcion"
+          placeholder="Ingresar descripción del estado"
+          [(ngModel)]="newEstado.terminado"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+        />
+      </span>
+      <span class="flex gap-1 justify-between">
+        <button
+          (click)="opNuevoEstado.hide()"
+          class="bg-red-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-red-600 transition-all"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="createEstado()"
+          class="bg-green-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-green-600 transition-all"
+        >
+          Crear
+        </button>
+      </span>
+    </main>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #opNuevaPrioridad>
+  <ng-template pTemplate="content">
+    <main class="rounded-lg flex flex-col gap-3">
+      <h1 class="font-bold">Nueva prioridad</h1>
+      <span class="flex flex-col gap-1">
+        <label for="descripcion"> Descripción </label>
+        <input
+          type="text"
+          id="descripcion"
+          placeholder="Ingresar descripción del estado"
+          [(ngModel)]="newPrioridad.descripcion"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+        />
+      </span>
+
+      <span class="flex gap-1 justify-between">
+        <button
+          (click)="opNuevaPrioridad.hide()"
+          class="bg-red-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-red-600 transition-all"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="createPrioridad()"
+          class="bg-green-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-green-600 transition-all"
+        >
+          Crear
+        </button>
+      </span>
+    </main>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #opNuevoGenero>
+  <ng-template pTemplate="content">
+    <main class="rounded-lg flex flex-col gap-3">
+      <h1 class="font-bold">Nuevo genero</h1>
+      <span class="flex flex-col gap-1">
+        <label for="descripcion"> Descripción </label>
+        <input
+          type="text"
+          id="descripcion"
+          placeholder="Ingresar descripción del genero"
+          [(ngModel)]="newGenero.descripcion"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+        />
+      </span>
+
+      <span class="flex gap-1 justify-between">
+        <button
+          (click)="opNuevoGenero.hide()"
+          class="bg-red-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-red-600 transition-all"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="createGenero()"
+          class="bg-green-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-green-600 transition-all"
+        >
+          Crear
+        </button>
+      </span>
+    </main>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #opNuevaTerminacion>
+  <ng-template pTemplate="content">
+    <main class="rounded-lg flex flex-col gap-3">
+      <h1 class="font-bold">Nueva Terminación</h1>
+      <span class="flex flex-col gap-1">
+        <label for="descripcion"> Descripción </label>
+        <input
+          type="text"
+          id="descripcion"
+          placeholder="Ingresar descripción del estado"
+          [(ngModel)]="newTerminacion.descripcion"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+        />
+      </span>
+      <span class="flex gap-1 justify-between">
+        <label
+          for="descripcion"
+          (click)="
+            newTerminacion.fueResolutoria = !newTerminacion.fueResolutoria
+          "
+        >
+          ¿Fue Resolutoría?
+        </label>
+        <input
+          type="checkbox"
+          id="descripcion"
+          placeholder="Ingresar descripción del estado"
+          [(ngModel)]="newTerminacion.fueResolutoria"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+        />
+      </span>
+      <span class="flex gap-1 justify-between">
+        <button
+          (click)="opNuevaTerminacion.hide()"
+          class="bg-red-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-red-600 transition-all"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="createTerminacion()"
+          class="bg-green-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-green-600 transition-all"
+        >
+          Crear
+        </button>
+      </span>
+    </main>
+  </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #opNuevoRol>
+  <ng-template pTemplate="content">
+    <main class="rounded-lg flex flex-col gap-3">
+      <h1 class="font-bold">Nuevo Rol</h1>
+      <span class="flex flex-col gap-1">
+        <label for="descripcion"> Descripción </label>
+        <input
+          type="text"
+          id="descripcion"
+          placeholder="Ingresar descripción del estado"
+          [(ngModel)]="newRol.descripcion"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+        />
+      </span>
+      <span class="flex gap-1 justify-between">
+        <label for="descripcion" (click)="newRol.esAdmin = !newRol.esAdmin">
+          ¿Es admin?
+        </label>
+        <input
+          type="checkbox"
+          id="descripcion"
+          placeholder="Ingresar descripción del estado"
+          [(ngModel)]="newRol.esAdmin"
+          class="p-3 bg-atm-700 rounded-lg outline-none focus:ring-1 focus:ring-atm-500 placeholder-text-atm-500 transition-all placeholder:text-atm-300"
+        />
+      </span>
+      <span class="flex gap-1 justify-between">
+        <button
+          (click)="opNuevoRol.hide()"
+          class="bg-red-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-red-600 transition-all"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="createRol()"
+          class="bg-green-500 text-white py-1 px-3 rounded-lg w-1/2 hover:bg-green-600 transition-all"
+        >
+          Crear
+        </button>
+      </span>
+    </main>
+  </ng-template>
+</p-overlayPanel>

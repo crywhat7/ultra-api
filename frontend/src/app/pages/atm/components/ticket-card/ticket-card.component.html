@@ -14,7 +14,7 @@
     </div>
     @if (ticket.terminacion) {
     <div class="font-bold">
-      Terminación: {{ ticket.terminacion.descripcion | date : "dd/MM/yyyy" }} el
+      Terminación: {{ ticket.terminacion.descripcion }} el
       {{ ticket.terminacion.createdAt | date : "dd/MM/yyyy" }}
     </div>
     }
@@ -26,23 +26,15 @@
       />
     </div>
     <footer class="flex justify-between items-center mt-3">
-      <span
-        class="text-xs bg-atm-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
-      >
+      <atm-badge type="gray" [subtle]="true">
         {{ ticket.createdAt | date : "dd/MM/yyyy" }}
-      </span>
+      </atm-badge>
       @if (ticket.assignedTo) {
-      <span
-        class="text-xs bg-atm-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
-      >
+      <atm-badge type="purple" [subtle]="true">
         {{ ticket.assignedTo.primerNombre }}
-      </span>
+      </atm-badge>
       } @else {
-      <span
-        class="text-xs bg-red-900/70 text-atm-50/70 p-2 px-3 rounded-full text-center flex items-center justify-center"
-      >
-        Sin Asignar
-      </span>
+      <atm-badge type="red" [subtle]="true"> Sin Asignar </atm-badge>
       }
     </footer>
   </main>

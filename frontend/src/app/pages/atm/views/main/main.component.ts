@@ -40,6 +40,10 @@ export class MainComponent {
     imagenBase64: '',
   };
 
+  loaders = {
+    createTicket: false,
+  };
+
   constructor(
     private atmService: AtmService,
     private alertaService: AlertaService
@@ -205,8 +209,11 @@ export class MainComponent {
       return;
     }
     this.nuevoTicket.postBy = this.userLogged.id;
+    this.loaders.createTicket = true;
+
     this.atmService.TICKETS.createTicket(this.nuevoTicket).subscribe(
       (response) => {
+        this.loaders.createTicket = false;
         if (!response) return;
         this.alertaService.showSuccess('Ticket creado con éxito');
         this.getTickets();
@@ -220,6 +227,9 @@ export class MainComponent {
         };
       }
     );
+    setTimeout(() => {
+      this.loaders.createTicket = false;
+    }, 10000);
   }
   nuevoMensajeEvent() {
     if (!this.nuevoMensaje.message) {
