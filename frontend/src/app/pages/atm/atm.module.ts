@@ -14,6 +14,8 @@ import { AtmButtonComponent } from './components/ui-components/button/button.com
 import { AtmBadgeComponent } from './components/ui-components/badge/badge.component';
 import { HeaderComponent } from './components/header/header.component';
 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 @NgModule({
   declarations: [
     LoginRegisterComponent,
@@ -33,6 +35,12 @@ import { HeaderComponent } from './components/header/header.component';
     AtmRoutingModule,
     HttpClientModule,
     PrimeNgModule,
+  ],
+  providers: [
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy,
+    },
   ],
 })
 export class AtmModule {}
