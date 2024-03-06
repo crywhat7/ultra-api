@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginRegisterComponent } from './views/login-register/login-register.component';
 import { MainComponent } from './views/main/main.component';
 import { LoginGuard } from './guards/login.guard';
+import { CrudsComponent } from './views/cruds/cruds/cruds.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,11 @@ const routes: Routes = [
   {
     path: 'main',
     component: MainComponent,
+    canActivate: [LoginGuard],
+  },
+  {
+    path: 'cruds',
+    component: CrudsComponent,
     canActivate: [LoginGuard],
   },
   {

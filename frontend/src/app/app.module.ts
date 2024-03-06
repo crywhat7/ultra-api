@@ -10,6 +10,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PrimeNgModule } from './modules/primeng/primeng.module';
 import { MessageService } from 'primeng/api';
 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -21,7 +23,13 @@ import { MessageService } from 'primeng/api';
     Examen1Module,
     PrimeNgModule,
   ],
-  providers: [MessageService],
+  providers: [
+    MessageService,
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy,
+    },
+  ],
   exports: [FormsModule, ReactiveFormsModule],
   bootstrap: [AppComponent],
 })

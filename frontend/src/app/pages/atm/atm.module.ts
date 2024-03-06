@@ -6,15 +6,28 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginRegisterComponent } from './views/login-register/login-register.component';
 import { MainComponent } from './views/main/main.component';
+import { CrudsComponent } from './views/cruds/cruds/cruds.component';
 import { TicketCardComponent } from './components/ticket-card/ticket-card.component';
 import { UserCardComponent } from './components/user-card/user-card.component';
+import { MessageChatComponent } from './components/message-chat/message-chat.component';
+import { AtmButtonComponent } from './components/ui-components/button/button.component';
+import { AtmBadgeComponent } from './components/ui-components/badge/badge.component';
+import { HeaderComponent } from './components/header/header.component';
+
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
     LoginRegisterComponent,
     MainComponent,
+    CrudsComponent,
+    HeaderComponent,
     TicketCardComponent,
     UserCardComponent,
+    MessageChatComponent,
+    // UI Components
+    AtmButtonComponent,
+    AtmBadgeComponent,
   ],
   imports: [
     CommonModule,
@@ -22,6 +35,12 @@ import { UserCardComponent } from './components/user-card/user-card.component';
     AtmRoutingModule,
     HttpClientModule,
     PrimeNgModule,
+  ],
+  providers: [
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy,
+    },
   ],
 })
 export class AtmModule {}

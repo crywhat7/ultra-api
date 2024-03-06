@@ -1,51 +1,33 @@
-<header class="bg-atm-950 p-3 px-4 flex justify-between items-center">
-  <div class="flex gap-4 items-center">
-    <span class="rounded-full size-8 md:size-12">
-      <img
-        class="rounded-full h-full object-cover"
-        [src]="rutaImagen + userLogged.avatarUrl"
-        alt="profile-img"
-      />
-    </span>
-    <span class="text-atm-50/55"> &#64;{{ userLogged.alias }} </span>
-  </div>
-  <div
-    class="hover:scale-110 hover:bg-atm-200 rounded-full p-1 hover:text-atm-950 transition-all cursor-pointer"
-    (click)="logout()"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="icon icon-tabler icon-tabler-logout"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      fill="none"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path
-        d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
-      />
-      <path d="M9 12h12l-3 -3" />
-      <path d="M18 15l3 -3" />
-    </svg>
-  </div>
-</header>
+<app-header></app-header>
 
 <main class="mx-8 mt-10">
   <header
     class="flex flex-col gap-3 text-center uppercase md:flex-row md:justify-between md:items-center"
   >
     <h1 class="font-bold">Lista de Tickets</h1>
-    <button
-      (click)="visibleCreateTicket = true"
-      class="py-2 px-4 bg-atm-800 text-atm-50 rounded-lg block hover:scale-110 hover:bg-atm-600 transition-all"
-    >
+
+    <atm-button type="primary" (click)="visibleCreateTicket = true">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon icon-tabler icon-tabler-square-rounded-plus"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path
+          d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"
+        />
+        <path d="M15 12h-6" />
+        <path d="M12 9v6" />
+      </svg>
       Crear Ticket
-    </button>
+    </atm-button>
   </header>
   <section
     class="grid grid-flow-row grid-cols-1 gap-4 max-md:grid-cols-1 lg:grid-cols-3 my-10"
@@ -116,12 +98,33 @@
             />
           </label>
         </div>
-        <button
+        <atm-button
+          [loading]="loaders.createTicket"
           (click)="createTicket()"
-          class="bg-atm-500 text-atm-50 p-3 rounded-lg uppercase font-semibold transition-all hover:bg-atm-600"
+          type="success"
+          className="w-full"
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon icon-tabler icon-tabler-square-rounded-plus"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"
+            />
+            <path d="M15 12h-6" />
+            <path d="M12 9v6" />
+          </svg>
           Crear Ticket
-        </button>
+        </atm-button>
       </section>
     </main>
   </ng-template>
@@ -131,7 +134,6 @@
   [(visible)]="visibleWorkTicket"
   [breakpoints]="{ '960px': '90dvh' }"
   [modal]="true"
-  [maximizable]="true"
   [responsive]="true"
   position="top"
 >
@@ -152,7 +154,7 @@
       </section>
     </main>
     } @else {
-    <main class="bg-atm-950 rounded-lg overflow-auto">
+    <main class="bg-atm-950 rounded-lg overflow-auto md:max-w-[75vw]">
       <header class="flex justify-between items-center gap-10 p-5">
         <h1 class="text-center text-lg font-bold">
           Ticket #{{ ticketSelected.id }}
@@ -163,8 +165,14 @@
         ></button>
       </header>
       <section class="flex flex-col md:flex-row gap-3 p-5">
-        <div class="flex flex-col gap-5 order-none md:order-2">
+        <div class="flex flex-col gap-5 order-none md:order-2 md:max-w-80">
           <h1 class="text-lg font-semibold">Información</h1>
+          <div class="flex flex-col gap-3 bg-atm-800 rounded-lg p-2">
+            <!-- Titulo -->
+            <h1 class="font-semibold">{{ ticketSelected.titulo }}</h1>
+            <!-- Descripcion -->
+            <p class="text-atm-50">{{ ticketSelected.descripcion }}</p>
+          </div>
           <div class="flex flex-col gap-3 bg-atm-800 rounded-lg p-2">
             <span class="w-full flex flex-col gap-3">
               <span class="flex justify-between items-center">
@@ -201,7 +209,7 @@
           </div>
           <div class="flex flex-col gap-3 bg-atm-800 rounded-lg p-2">
             <span>
-              <h1>Creador Por</h1>
+              <h1>Creado Por</h1>
               <app-user-card [usuario]="ticketSelected.postBy"></app-user-card>
             </span>
             <span>
@@ -215,52 +223,50 @@
               }
             </span>
           </div>
+          @if (userLogged.rol.esAdmin) {
+          <div class="flex flex-col gap-3 bg-atm-800 rounded-lg p-2">
+            <span>
+              <h1>Acciones</h1>
+            </span>
+            <span class="flex items-center justify-center gap-4">
+              <button
+                (click)="updateAsignedTicket()"
+                class="px-3 rounded-lg py-1 border border-atm-300 hover:bg-atm-200 hover:text-atm-950 transition-all"
+              >
+                Asignarme
+              </button>
+              <button
+                (click)="opTerminarTicket.toggle($event)"
+                class="px-3 rounded-lg py-1 border border-atm-300 hover:bg-atm-200 hover:text-atm-950 transition-all"
+              >
+                Terminar
+              </button>
+            </span>
+          </div>
+          }
         </div>
-        <div class="flex flex-col gap-5 order-none md:order-1">
+        <div class="flex flex-col gap-5 order-none md:order-1 md:min-h-[35rem]">
           <h1 class="text-lg font-semibold">Chat</h1>
-          <div class="bg-gray-900 rounded-lg p-3">
+          <div
+            class="bg-gray-900 rounded-lg p-3 flex flex-col justify-between h-full"
+          >
             <!-- Lista de Mensajes -->
             <div class="flex flex-col gap-3">
               @for (message of ticketSelected.messages; track $index) {
-              <span
-                class="flex flex-col {{
-                  $index % 2 === 0 ? 'bg-gray-700' : 'bg-atm-700'
-                }} rounded-lg p-1"
-              >
-                <span class="flex justify-between">
-                  <span class="flex gap-1">
-                    <span class="font-semibold">from:</span>
-                    &#64;{{ message.usuario.alias }}
-                  </span>
-                  <span>
-                    {{ message.createdAt | date : "hh:mm a" }}
-                  </span>
-                </span>
-                <span>{{ message.message }}</span>
-                @if (message.imagen) {
-                <p-image
-                  [src]="rutaImagen + message.imagen.url"
-                  alt="message-image"
-                  styleClass="*:h-40 *:w-full *:object-cover *:rounded-lg"
-                  [preview]="true"
-                ></p-image>
-                <!-- <img
-                  [src]="rutaImagen + message.imagen.url"
-                  class="h-40 w-full object-cover rounded-lg"
-                /> -->
-                }
-              </span>
-
+              <app-message-chat [message]="message"> </app-message-chat>
               }
             </div>
             <!-- ! Enviar un nuevo mensaje -->
-            <footer class="bg-atm-900 rounded-full flex mt-4">
-              <input
-                type="text"
+            <footer class="bg-atm-900 rounded-full flex mt-4 items-center">
+              <textarea
                 placeholder="Escribe un mensaje"
-                class="bg-atm-900 px-2 rounded-full placeholder:text-atm-200 flex-1"
-              />
-              <button class="p-2 rounded-full items-center justify-center flex">
+                [(ngModel)]="nuevoMensaje.message"
+                class="bg-atm-900 p-2 pl-5 rounded-full placeholder:text-atm-200 flex-1 outline-none resize-none"
+              ></textarea>
+              <button
+                class="p-2 border size-12 rounded-full items-center justify-center flex hover:scale-105 transition-all mr-3"
+                (click)="nuevoMensajeEvent()"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="icon icon-tabler icon-tabler-send"
@@ -288,3 +294,22 @@
     }
   </ng-template>
 </p-dialog>
+
+<p-overlayPanel #opTerminarTicket>
+  <ng-template pTemplate="headless">
+    <main class="bg-atm-800 p-3 rounded-lg flex flex-col gap-4">
+      <p-dropdown
+        [options]="terminaciones"
+        [(ngModel)]="terminacionSelected"
+        placeholder="Seleccionar terminación"
+        optionLabel="descripcion"
+      ></p-dropdown>
+      <button
+        (click)="terminarTicket()"
+        class="bg-atm-500 text-atm-50 p-3 rounded-lg uppercase font-semibold transition-all hover:bg-atm-600"
+      >
+        Terminar Ticket
+      </button>
+    </main>
+  </ng-template>
+</p-overlayPanel>

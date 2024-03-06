@@ -10,6 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 @NgModule({
   declarations: [Examen1Component],
   imports: [
@@ -22,6 +24,12 @@ import { ToastModule } from 'primeng/toast';
     TooltipModule,
     DropdownModule,
     ToastModule,
+  ],
+  providers: [
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy,
+    },
   ],
 })
 export class Examen1Module {}
