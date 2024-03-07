@@ -558,6 +558,63 @@
         </table>
       </div>
     </div>
+    <!-- ! Tabla de Usuarios -->
+    <div class="bg-atm-950 rounded-lg p-2">
+      <header class="font-semibold text-xl flex justify-between" #headerRoles>
+        Usuarios
+      </header>
+
+      <div class="relative overflow-x-auto mt-4">
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3">ID</th>
+              <th scope="col" class="px-6 py-3">Nombres</th>
+              <th scope="col" class="px-6 py-3">Apellidos</th>
+              <th scope="col" class="px-6 py-3">Alias</th>
+              <th scope="col" class="px-6 py-3">Fecha de Nacimiento</th>
+              <th scope="col" class="px-6 py-3">Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (usuario of usuarios; track $index) {
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                {{ usuario.id }}
+              </th>
+              <td class="px-6 py-2">
+                {{ usuario.primerNombre }} {{ usuario.segundoNombre }}
+              </td>
+              <td class="px-6 py-2">
+                {{ usuario.primerApellido }} {{ usuario.segundoApellido }}
+              </td>
+              <td class="px-6 py-2">
+                {{ usuario.alias }}
+              </td>
+              <td class="px-6 py-2">
+                {{ usuario.fechaNacimiento | date : "dd/MM/yyyy" }}
+              </td>
+              <td class="px-6 py-4">
+                <atm-badge
+                  [type]="usuario.rol.esAdmin ? 'green' : 'red'"
+                  [subtle]="true"
+                >
+                  {{ usuario.rol.descripcion }}
+                </atm-badge>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
   </section>
 </main>
 

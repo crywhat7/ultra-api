@@ -5,6 +5,7 @@ import {
   Prioridad,
   Rol,
   Terminacion,
+  Usuario,
 } from '../../../types/atm';
 import { AtmService } from '../../../services/atm.service';
 import { AlertaService } from '../../../../../services/alerta.service';
@@ -47,12 +48,15 @@ export class CrudsComponent {
     descripcion: '',
     esAdmin: false,
   };
+  usuarios: Usuario[] = [];
+
   constructor(private atmService: AtmService, private alerta: AlertaService) {
     this.getEstados();
     this.getPrioridades();
     this.getTerminaciones();
     this.getGeneros();
     this.getRoles();
+    this.getUsuarios();
   }
 
   getEstados() {
@@ -189,6 +193,12 @@ export class CrudsComponent {
 
     this.atmService.ROLES.createRol(this.newRol).subscribe(() => {
       this.getRoles();
+    });
+  }
+  getUsuarios() {
+    this.atmService.USERS.getUsers().subscribe((usuarios) => {
+      if (!usuarios) return;
+      this.usuarios = usuarios.filter((u) => u.rol.id !== 4);
     });
   }
 }

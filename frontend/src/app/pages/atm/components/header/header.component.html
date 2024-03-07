@@ -10,6 +10,7 @@
     <span class="text-atm-50/55"> &#64;{{ userLogged.alias }} </span>
   </div>
   <div class="flex gap-3 items-center">
+    @if (userLogged.rol.esAdmin) {
     <a
       [routerLink]="['/atm/main']"
       pTooltip="Tickets"
@@ -69,6 +70,8 @@
         <path d="M20.733 20l1.3 .75" />
       </svg>
     </a>
+    }
+
     <div
       class="hover:scale-110 hover:bg-atm-200 rounded-full p-1 hover:text-atm-950 transition-all cursor-pointer"
       (click)="logout()"

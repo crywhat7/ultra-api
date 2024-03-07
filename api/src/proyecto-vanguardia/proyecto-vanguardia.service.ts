@@ -158,7 +158,8 @@ export class ProyectoVanguardiaService {
         .schema(ESQUEMA)
         .from('usuarios')
         .select(dataitemUsuario)
-        .eq('id', id);
+        .eq('id', id)
+        .single();
 
       return new DB_RESPONSE<typeof data>(
         data,
@@ -622,6 +623,7 @@ export class ProyectoVanguardiaService {
         'Error al obtener ticket',
       ).sendResponse();
     },
+
     deleteTicket: async (id: number) => {
       const { data, error } = await this.supabase
         .schema(ESQUEMA)
@@ -637,6 +639,7 @@ export class ProyectoVanguardiaService {
         'Error al eliminar ticket',
       ).sendResponse();
     },
+
     createTicket: async (ticket: CreateTicketDto) => {
       const { titulo, descripcion, idPrioridad, postBy, imagenBase64 } = ticket;
 
@@ -663,14 +666,29 @@ export class ProyectoVanguardiaService {
       }
 
       const { id: idNuevoTicket } = nuevoTicket;
+      const {
+        data: { primerNombre, alias },
+      } = await this.USUARIOS.getUsuarioById(Number(postBy));
 
       // ! Isertar un mensaje en el chat por parte del bot, indicando que se ha creado el ticket y con su respectiva imagen
       const ID_USER_BOT = 1;
       await this.CHAT.insertChatMessage(
         idNuevoTicket,
         ID_USER_BOT,
-        `Ticket incializado: #${idNuevoTicket}`,
+        `Hola ${primerNombre} (${alias}), hemos recibido tu ticket.`,
         imagenBase64,
+      );
+
+      await this.CHAT.insertChatMessage(
+        idNuevoTicket,
+        ID_USER_BOT,
+        `En breve un agente se pondra en contacto contigo para ayudarte.`,
+      );
+
+      await this.CHAT.insertChatMessage(
+        idNuevoTicket,
+        ID_USER_BOT,
+        `Gracias por tu paciencia.`,
       );
 
       return await this.TICKETS.getTicketById(idNuevoTicket);
