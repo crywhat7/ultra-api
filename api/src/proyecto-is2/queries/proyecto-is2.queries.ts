@@ -31,6 +31,7 @@ genero: generos (${dataItemGenero}),
 tipoPago: tipos_pago (${dataItemTipoPago}),
 alias,
 salario,
+password,
 inhabilitado,
 observaciones
 `;

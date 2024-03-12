@@ -116,6 +116,7 @@ export class ProyectoIS2Service {
         password,
         salario,
         idTipoPago,
+        inhabilitado,
       } = empleado;
       const { data, error } = await this.supabase
         .schema(SCHEMA)
@@ -125,12 +126,14 @@ export class ProyectoIS2Service {
           apellido,
           email,
           telefono,
+          observaciones: empleado.observaciones,
           id_puesto: idPuesto,
           id_genero: idGenero,
           alias,
           password,
           salario,
           id_tipo_pago: idTipoPago,
+          inhabilitado,
         })
         .eq('id', id)
         .select(dataItemEmpleado)
