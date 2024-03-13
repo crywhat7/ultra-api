@@ -25,6 +25,7 @@ import { STORAGE_RESPONSE } from '../utils/storage-response';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProducto.dto';
 import { CreateClientDto } from './dtos/CreateClient.dto';
+import { CreateFacturaDto } from './dtos/CreateFactura.dto';
 
 const SCHEMA = 'is2';
 
@@ -679,37 +680,26 @@ export class ProyectoIS2Service {
       ).sendResponse();
     },
 
-    processCreateFactura: async (props: {
-      empleado: {
-        idEmpleado: number;
+    processCreateFactura: async (props: CreateFacturaDto) => {
+      const params = {
+        p_props: props,
       };
-      cliente: {
-        dni: string;
-        nombreCompleto: string;
-        telefono: string;
-      };
-      formaPago: {
-        idFormaPago: number;
-      };
-      productosFactura: {
-        idProducto: number;
-        idTipoUnidad: number;
-        cantidad: number;
-        precioUnitario: number;
-        subtotal: number;
-      }[];
-    }) => {
-      const { data, error } = await this.supabase.rpc('ft_proc_facturar', {
-        p_props: JSON.stringify(props),
-      });
-      return new DB_RESPONSE<typeof data>(
-        data,
-        'crearFactura',
-        error,
-        'Error al crear factura',
-      ).sendResponse();
+      const { data: idFactura, error } = await this.supabase
+        .schema(SCHEMA)
+        .rpc('ft_proc_facturar', params)
+        .select('*')
+        .single();
 
-      // 1. Ejecutar la función
+      if (error) {
+        return new DB_RESPONSE<typeof idFactura>(
+          idFactura,
+          'facturar',
+          error,
+          'Error al facturar',
+        ).sendResponse();
+      }
+
+      return this.FACTURAS.getFacturaById(idFactura);
     },
   };
   returnActualOrNewClient = async (

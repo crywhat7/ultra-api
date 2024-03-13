@@ -17,6 +17,7 @@ import { UploadImageDto } from './dtos/UploadImage.dto';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { UpdateProductDto } from './dtos/UpdateProducto.dto';
 import { UpdatePrecioProductDto } from './dtos/UpdatePrecioProducto.dto';
+import { CreateFacturaDto } from './dtos/CreateFactura.dto';
 
 @ApiTags('Proyecto Ingenieria de Software 2')
 @Controller('proyecto-is2')
@@ -203,5 +204,19 @@ export class ProyectoIS2Controller {
   @Get('clientes/:id')
   async getClienteById(@Param('id') id: number) {
     return await this.proyectoIS2Service.CLIENTES.getClienteById(id);
+  }
+
+  // ! Facturas
+  @Post('facturas')
+  async postFactura(@Body() body: CreateFacturaDto) {
+    return await this.proyectoIS2Service.FACTURAS.processCreateFactura(body);
+  }
+  @Get('facturas')
+  async getFacturas() {
+    return await this.proyectoIS2Service.FACTURAS.getFacturas();
+  }
+  @Get('facturas/:id')
+  async getFacturaById(@Param('id') id: number) {
+    return await this.proyectoIS2Service.FACTURAS.getFacturaById(id);
   }
 }
