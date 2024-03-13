@@ -668,7 +668,7 @@ export class ProyectoIS2Service {
       const { data, error } = await this.supabase
         .schema(SCHEMA)
         .from('facturas')
-        .update({ anulada: true })
+        .update({ nula: true })
         .eq('id', idFactura)
         .single();
 

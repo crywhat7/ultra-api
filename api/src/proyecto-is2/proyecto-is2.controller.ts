@@ -219,4 +219,8 @@ export class ProyectoIS2Controller {
   async getFacturaById(@Param('id') id: number) {
     return await this.proyectoIS2Service.FACTURAS.getFacturaById(id);
   }
+  @Patch('facturas/:id/anular')
+  async patchAnularFactura(@Param('id') id: number) {
+    return await this.proyectoIS2Service.FACTURAS.anularFactura(id);
+  }
 }
