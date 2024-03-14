@@ -4,8 +4,33 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig } from './swagger/swagger';
 import { json, urlencoded } from 'express';
 
+import { config } from './config/config';
+import { obtenerCertificados } from './config/obtenerCertificados';
+import { readFileSync } from 'fs';
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const { port, usarCertificados } = config;
+  let app = null;
+
+  if (usarCertificados) {
+    try {
+      const certificados = await obtenerCertificados();
+      console.log('certificados', certificados);
+      const httpsOptions = {
+        cert: readFileSync(certificados.SSLCertificateFile),
+        ca: readFileSync(certificados.SSLCACertificateFile),
+        key: readFileSync(certificados.SSLCertificateKeyFile),
+      };
+
+      app = await NestFactory.create(AppModule, {
+        httpsOptions,
+      });
+    } catch (error) {
+      console.log('Error al obtener los certificados', error);
+    }
+  } else {
+    app = await NestFactory.create(AppModule);
+  }
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
@@ -23,8 +48,8 @@ async function bootstrap() {
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
 
-  await app.listen(process.env.PORT || 3000).then(() => {
-    console.log(`Server running on port ${process.env.PORT || 3000}`);
+  await app.listen(port).then(() => {
+    console.log(`Server running on port ${port}`);
   });
 }
 bootstrap();
