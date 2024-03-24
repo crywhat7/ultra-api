@@ -96,4 +96,5 @@ export interface CreateChat {
   idUsuario: number;
   idTicket: number;
   imagenBase64: string = '';
+  allMessages: { esAsesor: boolean; message: string }[] = [];
 }

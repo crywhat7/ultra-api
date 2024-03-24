@@ -20,6 +20,15 @@ import { CreateEstadoDto } from './dtos/estado.dto';
 import { CreateTerminacionDto } from './dtos/terminacion.dto';
 import { CreateTicketDto } from './dtos/ticket.dto';
 
+import { config } from '../config/config';
+import OpenAI from 'openai';
+import {
+  CompletionCreateParamsNonStreaming,
+  CreateChatCompletionRequestMessage,
+} from 'openai/resources/chat/completions';
+
+const ID_USER_BOT = 1;
+
 const ESQUEMA = 'atm';
 
 @Injectable()
@@ -671,7 +680,7 @@ export class ProyectoVanguardiaService {
       } = await this.USUARIOS.getUsuarioById(Number(postBy));
 
       // ! Isertar un mensaje en el chat por parte del bot, indicando que se ha creado el ticket y con su respectiva imagen
-      const ID_USER_BOT = 1;
+
       await this.CHAT.insertChatMessage(
         idNuevoTicket,
         ID_USER_BOT,
@@ -682,13 +691,7 @@ export class ProyectoVanguardiaService {
       await this.CHAT.insertChatMessage(
         idNuevoTicket,
         ID_USER_BOT,
-        `En breve un agente se pondra en contacto contigo para ayudarte.`,
-      );
-
-      await this.CHAT.insertChatMessage(
-        idNuevoTicket,
-        ID_USER_BOT,
-        `Gracias por tu paciencia.`,
+        'Por favor, proporciona toda la información necesaria para poder ayudarte de la mejor manera posible.',
       );
 
       return await this.TICKETS.getTicketById(idNuevoTicket);
@@ -739,6 +742,12 @@ export class ProyectoVanguardiaService {
         .select(dataItemTicket)
         .single();
 
+      await this.CHAT.insertChatMessage(
+        id,
+        ID_USER_BOT,
+        'El ticket ha sido asignado a un agente así que a partir de ahora el CHAT_BOT no seguirá respondiente, en breve se pondra en contacto contigo. Gracias por tu paciencia.',
+      );
+
       return new DB_RESPONSE<typeof data>(
         data,
         'tickets',
@@ -753,6 +762,8 @@ export class ProyectoVanguardiaService {
       userId: number,
       message: string,
       imageBase64?: string,
+      generarRespuestaBot = false,
+      allMessages?: { esAsesor: boolean; message: string }[],
     ) => {
       let idImage: number | null = null;
       if (imageBase64) {
@@ -794,6 +805,18 @@ export class ProyectoVanguardiaService {
         .select(dataItemChat)
         .single();
 
+      if (generarRespuestaBot && allMessages) {
+        const hayUnMensajeDelAsesor = allMessages.some((item) => item.esAsesor);
+        if (!hayUnMensajeDelAsesor) {
+          const { content } = await this.CHAT_BOT.getAutoCompletion({
+            message,
+            allMessages,
+          });
+
+          await this.CHAT.insertChatMessage(ticketId, ID_USER_BOT, content);
+        }
+      }
+
       return new DB_RESPONSE<typeof data>(
         data,
         'chat',
@@ -827,6 +850,71 @@ export class ProyectoVanguardiaService {
         error,
         'Error al insertar imagen de ticket',
       ).sendResponse();
+    },
+  };
+
+  CHAT_BOT = {
+    getAutoCompletion: async ({
+      message,
+      allMessages,
+    }: {
+      message: string;
+      allMessages?: { esAsesor: boolean; message: string }[];
+    }) => {
+      try {
+        const gpt = new OpenAI({
+          apiKey: config.openAiKey,
+        });
+        const instructions =
+          'Eres un agente de soporte técnico de la empresa ATM y un cliente te informa un problema, debes responder con una solución a su problema.';
+
+        const mensajesAnteriores: CreateChatCompletionRequestMessage[] =
+          allMessages.map((item) => {
+            return {
+              role: 'system',
+              content: item.message,
+            };
+          });
+
+        mensajesAnteriores.unshift({
+          role: 'system',
+          content: instructions,
+        });
+
+        mensajesAnteriores.push({
+          role: 'user',
+          content: message,
+        });
+
+        const messages =
+          mensajesAnteriores?.length > 0
+            ? mensajesAnteriores
+            : ([
+                {
+                  role: 'system',
+                  content: instructions,
+                },
+                {
+                  role: 'user',
+                  content: message,
+                },
+              ] as CreateChatCompletionRequestMessage[]);
+
+        const response = await gpt.chat.completions.create({
+          model: 'gpt-3.5-turbo',
+          messages,
+        });
+        const { choices } = response;
+        const [firstChoice] = choices;
+        const {
+          message: { content },
+        } = firstChoice;
+
+        return { content };
+      } catch (error) {
+        console.log(error);
+        throw new Error('Error al obtener autocompletado');
+      }
     },
   };
 }

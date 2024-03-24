@@ -5,6 +5,7 @@ import { swaggerConfig } from './swagger/swagger';
 import { json, urlencoded } from 'express';
 
 import { config } from './config/config';
+
 import { obtenerCertificados } from './config/obtenerCertificados';
 import { readFileSync } from 'fs';
 

@@ -20,6 +20,7 @@ import { CreateTerminacionDto } from './dtos/terminacion.dto';
 import { CreateTicketDto } from './dtos/ticket.dto';
 import { CreateChatDto } from './dtos/chat.dto';
 import { LoginDto } from './dtos/login.dto';
+import { AutoCompleteDto } from './dtos/autocomplete.dto';
 
 @ApiTags('Proyecto Vanguardia - ATM')
 @Controller('atm')
@@ -232,12 +233,22 @@ export class ProyectoVanguardiaController {
   // ! Chat
   @Post('chat')
   async enviarMensaje(@Body() body: CreateChatDto) {
-    const { idTicket, idUsuario, message, imagenBase64 } = body;
+    const { idTicket, idUsuario, message, imagenBase64, allMessages } = body;
     return await this.pryVanguardiaSrv.CHAT.insertChatMessage(
       idTicket,
       idUsuario,
       message,
       imagenBase64,
+      true,
+      allMessages,
     );
+  }
+
+  // ! ChatBot
+  @Post('chatbot/autocomplete')
+  async autocomplete(@Body() body: AutoCompleteDto) {
+    return await this.pryVanguardiaSrv.CHAT_BOT.getAutoCompletion({
+      message: body.text,
+    });
   }
 }

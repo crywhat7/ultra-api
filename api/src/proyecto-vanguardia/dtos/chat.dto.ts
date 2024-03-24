@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CreateChatDto {
   @ApiProperty({
     description: 'Mensaje',
@@ -33,4 +33,11 @@ export class CreateChatDto {
   @IsString()
   @IsNotEmpty()
   imagenBase64: string;
+
+  @ApiProperty({
+    description: 'Todos los mensajes del chat',
+    example: [{ esAsesor: true, message: 'Hola, como puedo ayudarte?' }],
+  })
+  @IsArray()
+  allMessages: { esAsesor: boolean; message: string }[];
 }

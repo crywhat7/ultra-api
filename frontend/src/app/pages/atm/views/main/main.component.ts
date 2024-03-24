@@ -4,7 +4,6 @@ import { AtmService } from '../../services/atm.service';
 import {
   CreateChat,
   CreateTicket,
-  Estado,
   Prioridad,
   Terminacion,
   Ticket,
@@ -38,10 +37,12 @@ export class MainComponent {
     idUsuario: 0,
     idTicket: 0,
     imagenBase64: '',
+    allMessages: [],
   };
 
   loaders = {
     createTicket: false,
+    sendMessage: false,
   };
 
   constructor(
@@ -250,8 +251,18 @@ export class MainComponent {
       return;
     }
 
+    const allMessages = ticket.messages.map((message) => ({
+      esAsesor: Boolean(ticket.assignedTo),
+      message: message.message,
+    }));
+
+    this.nuevoMensaje.allMessages = allMessages;
+
+    this.loaders.sendMessage = true;
+
     this.atmService.TICKETS_CHAT.postChat(this.nuevoMensaje).subscribe(
       (response) => {
+        this.loaders.sendMessage = false;
         if (!response) return;
         this.alertaService.showSuccess('Mensaje enviado con éxito');
         this.nuevoMensaje = {
@@ -259,10 +270,14 @@ export class MainComponent {
           idUsuario: 0,
           idTicket: 0,
           imagenBase64: '',
+          allMessages: [],
         };
 
         this.getTicketSelected();
       }
     );
+    setTimeout(() => {
+      this.loaders.sendMessage = false;
+    }, 10000);
   }
 }
