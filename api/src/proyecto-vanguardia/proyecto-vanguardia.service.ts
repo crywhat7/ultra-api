@@ -808,9 +808,11 @@ export class ProyectoVanguardiaService {
       if (generarRespuestaBot && allMessages) {
         const hayUnMensajeDelAsesor = allMessages.some((item) => item.esAsesor);
         if (!hayUnMensajeDelAsesor) {
+          const { descripcion: descripcionTicket } = (await this.TICKETS.getTicketById(ticketId)).data;
           const { content } = await this.CHAT_BOT.getAutoCompletion({
             message,
             allMessages,
+            descripcionProblema: descripcionTicket || ''
           });
 
           await this.CHAT.insertChatMessage(ticketId, ID_USER_BOT, content);
@@ -857,16 +859,21 @@ export class ProyectoVanguardiaService {
     getAutoCompletion: async ({
       message,
       allMessages,
+      descripcionProblema,
     }: {
       message: string;
       allMessages?: { esAsesor: boolean; message: string }[];
+      descripcionProblema: string
     }) => {
       try {
         const gpt = new OpenAI({
           apiKey: config.openAiKey,
         });
+
+
+
         const instructions =
-          'Eres un agente de soporte técnico de la empresa ATM y un cliente te informa un problema, debes responder con una solución a su problema.';
+        `Eres un agente de soporte técnico de la empresa ATM y un cliente te informa un problema, debes responder con una solución a su problema, asegurate de responder solamente con mensajes relacionados al problema que presentó el usuario: ${descripcionProblema}, si el usuario pregunta algo diferente, decirle que unicamente estas programado para responder acerca del problema principal, debe ser en forma de guía o pasos y con un máximo de 300 caracteres`;
 
         const mensajesAnteriores: CreateChatCompletionRequestMessage[] =
           allMessages.map((item) => {
@@ -890,15 +897,15 @@ export class ProyectoVanguardiaService {
           mensajesAnteriores?.length > 0
             ? mensajesAnteriores
             : ([
-                {
-                  role: 'system',
-                  content: instructions,
-                },
-                {
-                  role: 'user',
-                  content: message,
-                },
-              ] as CreateChatCompletionRequestMessage[]);
+              {
+                role: 'system',
+                content: instructions,
+              },
+              {
+                role: 'user',
+                content: message,
+              },
+            ] as CreateChatCompletionRequestMessage[]);
 
         const response = await gpt.chat.completions.create({
           model: 'gpt-3.5-turbo',

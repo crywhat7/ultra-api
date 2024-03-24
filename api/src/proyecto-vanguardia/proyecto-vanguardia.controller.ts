@@ -243,12 +243,4 @@ export class ProyectoVanguardiaController {
       allMessages,
     );
   }
-
-  // ! ChatBot
-  @Post('chatbot/autocomplete')
-  async autocomplete(@Body() body: AutoCompleteDto) {
-    return await this.pryVanguardiaSrv.CHAT_BOT.getAutoCompletion({
-      message: body.text,
-    });
-  }
 }
