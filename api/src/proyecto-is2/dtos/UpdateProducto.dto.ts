@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class UpdateProductDto {

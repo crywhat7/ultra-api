@@ -70,6 +70,16 @@ telefono,
 inactivo
 `;
 
+export const dataItemClienteCrud = `
+id,
+created_at,
+nombre,
+apellido,
+saldo,
+direccion,
+inactivo
+`;
+
 export const dataItemDetalleFactura = `
 ${BASICS},
 idFactura: id_factura,
