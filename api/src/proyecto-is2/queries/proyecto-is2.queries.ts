@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 export const BASICS = `
 id,
 createdAt: created_at
@@ -65,7 +66,8 @@ export const dataItemCliente = `
 ${BASICS},
 dni,
 nombreCompleto: nombre_completo,
-telefono
+telefono,
+inactivo
 `;
 
 export const dataItemDetalleFactura = `

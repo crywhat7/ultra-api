@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { Module } from '@nestjs/common';
 import { ProyectoVanguardiaController } from './proyecto-vanguardia.controller';
 import { ProyectoVanguardiaService } from './proyecto-vanguardia.service';

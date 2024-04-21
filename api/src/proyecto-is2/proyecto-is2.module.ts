@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { Module } from '@nestjs/common';
 import { ProyectoIS2Controller } from './proyecto-is2.controller';
 import { ProyectoIS2Service } from './proyecto-is2.service';

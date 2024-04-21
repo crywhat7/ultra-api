@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/db/supabase.service';
 import { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
